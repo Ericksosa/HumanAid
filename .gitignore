@@ -1,22 +1,22 @@
-   bin/
-   obj/
-   .vs/
-   *.user
-   *.suo
-   *.userosscache
-   *.sln.docstates
-   appsettings.json
-   appsettings.Development.json
-   appsettings.Production.json
-   publish/
-   *.nupkg
-   packages/
-   *.rsuser
-   *.sln.docstates
-   .idea/
-   *.sln.iml
-   .vscode/
-   *.log
-   docker-compose.override.yml
-   docker-compose.*.yml
-   Dockerfile.*
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+publish/
+*.nupkg
+packages/
+*.rsuser
+*.sln.docstates
+.idea/
+*.sln.iml
+.vscode/
+*.log
+docker-compose.override.yml
+docker-compose.*.yml
+Dockerfile.*
