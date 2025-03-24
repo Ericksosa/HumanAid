@@ -13,23 +13,28 @@
 
    1. Clona el repositorio:
    
+   ```bash
    git clone https://github.com/Ericksosa/HumanAid.git
-
+   ```
    
    2. Navega al directorio del proyecto:
    
+   ```bash
    cd HumanAid
+   ```
 
    
    3. Restaura las dependencias:
    
+   ```bash
    dotnet restore
-
+   ```
    
    4. Ejecuta el proyecto:
    
+   ```bash
    dotnet run
-
+   ```
    
    ## Conexión a la base de datos
 
