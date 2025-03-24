@@ -13,7 +13,7 @@
 
    1. Clona el repositorio:
    
-   git clone https://github.com/tu-usuario/tu-repositorio.git
+   git clone https://github.com/Ericksosa/HumanAid.git
 
    
    2. Navega al directorio del proyecto:
