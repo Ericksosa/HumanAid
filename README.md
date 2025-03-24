@@ -49,16 +49,19 @@
 
    1. Crea una nueva rama para tu feature usando tu nombre:
 
+   ```bash
    git checkout -b feature/nueva-feature
-   
+   ```
    2. Realiza tus cambios y haz commit:
    
+   ```bash
    git commit -m "Descripción de los cambios"
-
+   ```
    3. Sube tu rama al repositorio remoto:
    
+   ```bash
    git push origin feature/nueva-feature
-
+   ```
    4. Abre un Pull Request en GitHub.
    
 
