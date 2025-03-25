@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HumanAid")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+beb6818f201187d23fb00f9080ececc1478afad0")]
 [assembly: System.Reflection.AssemblyProductAttribute("HumanAid")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HumanAid")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
