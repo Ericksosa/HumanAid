@@ -23,79 +23,121 @@ namespace HumanAid.Data
         public DbSet<VoluntarioAdministrativo> VoluntarioAdministrativo { get; set; }
         public DbSet<VoluntarioMision> VoluntarioMision { get; set; }
         public DbSet<VoluntarioSanitario> VoluntarioSanitario { get; set; }
-
+        public DbSet<Rol> Rol { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Relaciones de uno a uno
+            // Relaciones de uno a uno
             modelBuilder.Entity<Voluntario>()
                 .HasOne(v => v.VoluntarioAdministrativo)
                 .WithOne(va => va.voluntario)
-                .HasForeignKey<VoluntarioAdministrativo>(va => va.VoluntarioAdministrativoId);
+                .HasForeignKey<VoluntarioAdministrativo>(va => va.VoluntarioAdministrativoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Voluntario>()
                .HasOne(v => v.VoluntarioSanitario)
                .WithOne(va => va.Voluntario)
-               .HasForeignKey<VoluntarioSanitario>(va => va.VoluntarioSanitarioId);
+               .HasForeignKey<VoluntarioSanitario>(va => va.VoluntarioSanitarioId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-            //Relaciones de uno a mucho
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.VoluntarioAdministrativo)
+                .WithOne(va => va.Usuario)
+                .HasForeignKey<VoluntarioAdministrativo>(va => va.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.VoluntarioSanitario)
+                .WithOne(vs => vs.Usuario)
+                .HasForeignKey<VoluntarioSanitario>(vs => vs.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.VoluntarioMision)
+                .WithOne(vm => vm.Usuario)
+                .HasForeignKey<VoluntarioMision>(vm => vm.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Socio)
+                .WithOne(s => s.Usuario)
+                .HasForeignKey<Socio>(s => s.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relaciones de uno a muchos
             modelBuilder.Entity<Voluntario>()
                 .HasOne(v => v.Sede)
                 .WithMany(s => s.Voluntarios)
-                .HasForeignKey(v => v.SedeId);
+                .HasForeignKey(v => v.SedeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Alimento>()
-                .HasOne(v => v.Envio)
-                .WithMany(s => s.Alimentos)
-                .HasForeignKey(v => v.EnvioId);
+                .HasOne(a => a.Envio)
+                .WithMany(e => e.Alimentos)
+                .HasForeignKey(a => a.EnvioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Medicamento>()
-                .HasOne(v => v.Envio)
-                .WithMany(s => s.Medicamentos)
-                .HasForeignKey(v => v.EnvioId);
+                .HasOne(m => m.Envio)
+                .WithMany(e => e.Medicamentos)
+                .HasForeignKey(m => m.EnvioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<MisionHumanitaria>()
-                .HasOne(v => v.Envio)
-                .WithMany(s => s.MisionesHumanitarias)
-                .HasForeignKey(v => v.EnvioId);
+                .HasOne(m => m.Envio)
+                .WithMany(e => e.MisionesHumanitarias)
+                .HasForeignKey(m => m.EnvioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Socio>()
-                .HasOne(v => v.TipoCuota)
-                .WithMany(s => s.Socios)
-                .HasForeignKey(v => v.TipoCuotaId);
-
+                .HasOne(s => s.TipoCuota)
+                .WithMany(tc => tc.Socios)
+                .HasForeignKey(s => s.TipoCuotaId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Socio>()
                 .HasOne(s => s.Sede)
-                .WithMany(s => s.Socios)
-                .HasForeignKey(s => s.SedeId);
+                .WithMany(sd => sd.Socios)
+                .HasForeignKey(s => s.SedeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            //Relaciones de mucho a mucho
+            modelBuilder.Entity<Usuario>()
+                .HasOne(u => u.Rol)
+                .WithMany(r => r.Usuarios)
+                .HasForeignKey(u => u.RolId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relaciones de muchos a muchos
             modelBuilder.Entity<EnvioSede>()
-        .HasKey(ea => new { ea.EnvioId, ea.SedeId });
+                .HasKey(es => new { es.EnvioId, es.SedeId });
 
             modelBuilder.Entity<EnvioSede>()
-                .HasOne(ea => ea.Envio)
+                .HasOne(es => es.Envio)
                 .WithMany(e => e.EnvioSedes)
-                .HasForeignKey(ea => ea.EnvioId);
+                .HasForeignKey(es => es.EnvioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<EnvioSede>()
-                .HasOne(ea => ea.Sede)
-                .WithMany(a => a.EnvioSedes)
-                .HasForeignKey(ea => ea.SedeId);
+                .HasOne(es => es.Sede)
+                .WithMany(s => s.EnvioSedes)
+                .HasForeignKey(es => es.SedeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VoluntarioMision>()
-        .HasKey(ea => new { ea.VoluntarioSanitarioId, ea.MisionId });
+                .HasKey(vm => new { vm.VoluntarioSanitarioId, vm.MisionId });
 
             modelBuilder.Entity<VoluntarioMision>()
-                .HasOne(ea => ea.VoluntarioSanitario)
-                .WithMany(e => e.VoluntarioMisiones)
-                .HasForeignKey(ea => ea.VoluntarioSanitarioId);
+                .HasOne(vm => vm.VoluntarioSanitario)
+                .WithMany(vs => vs.VoluntarioMisiones)
+                .HasForeignKey(vm => vm.VoluntarioSanitarioId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<VoluntarioMision>()
-                .HasOne(ea => ea.MisionHumanitaria)
-                .WithMany(a => a.VoluntarioMisiones)
-                .HasForeignKey(ea => ea.MisionId);
+                .HasOne(vm => vm.MisionHumanitaria)
+                .WithMany(mh => mh.VoluntarioMisiones)
+                .HasForeignKey(vm => vm.MisionId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

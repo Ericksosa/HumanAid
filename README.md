@@ -71,6 +71,14 @@ Copiar este codigo y pegarlo en la terminal.
 ```bash
 update-database
 ```
+
+## Revertir base de datos
+
+Copiar este codigo y pegarlo en la terminal.
+```bash
+update-database 0
+```
+
 	
 
 	

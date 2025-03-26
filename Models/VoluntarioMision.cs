@@ -16,5 +16,9 @@ namespace HumanAid.Models
         public int MisionId { get; set; }
         [ForeignKey("MisionId")]
         public MisionHumanitaria MisionHumanitaria { get; set; }
+
+        public int UsuarioId { get; set; }
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; }
     }
 }

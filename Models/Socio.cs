@@ -29,6 +29,10 @@ namespace HumanAid.Models
         [ForeignKey("SedeId")]
         public Sede Sede { get; set; }
 
+        public int UsuarioId { get; set; }
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; }
+
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
     }
 }
