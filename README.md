@@ -66,11 +66,19 @@
 
 ## Migrar base de datos
 
+<<<<<<< HEAD
 	Copiar este codigo y pegarlo en la terminal.
 	
 	```bash
 	update-database
 	```
+=======
+Copiar este codigo y pegarlo en la terminal.
+	
+```bash
+update-database
+```
+>>>>>>> d2c18fee7b4fc274c1cb144d056026a2eebb4c2b
 	
 
 	
