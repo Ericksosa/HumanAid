@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Configure the database connection string from appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("ConexionSql");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HumanAidDbContext>(options =>
     options.UseSqlServer(connectionString));
 
