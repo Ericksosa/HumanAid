@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HumanAid.Models
 {
@@ -15,5 +16,9 @@ namespace HumanAid.Models
 
         //Relacion
         public Voluntario voluntario { get; set; }
+
+        public int UsuarioId { get; set; }
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; }
     }
 }
