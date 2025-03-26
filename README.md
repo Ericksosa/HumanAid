@@ -64,6 +64,20 @@
    ```
    4. Abre un Pull Request en GitHub.
 
+## Actualizar rama propia con master
+
+1. Localizarte en tu rama propia
+
+```bash
+git checkout <nombre-de-tu-rama>
+```
+2. Actualizar tu rama con la rama master
+```bash
+git pull origin master
+```
+3. Resolver conflictos si los hay
+
+
 ## Migrar base de datos
 
 Copiar este codigo y pegarlo en la terminal.
