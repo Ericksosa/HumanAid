@@ -68,9 +68,9 @@
 
 Copiar este codigo y pegarlo en la terminal.
 	
-	```bash
-	update-database
-	```
+```bash
+update-database
+```
 	
 
 	
