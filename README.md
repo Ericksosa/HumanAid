@@ -63,6 +63,19 @@
    git push origin feature/nueva-feature
    ```
    4. Abre un Pull Request en GitHub.
+
+## Migrar base de datos
+
+	Copiar este codigo y pegarlo en la terminal.
+	
+	```bash
+	update-database
+	```
+	
+
+	
+	
+
    
 
 
