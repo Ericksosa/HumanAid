@@ -64,6 +64,20 @@
    ```
    4. Abre un Pull Request en GitHub.
 
+## Actualizar rama propia con master
+
+1. Localizarte en tu rama propia
+
+```bash
+git checkout <nombre-de-tu-rama>
+```
+2. Actualizar tu rama con la rama master
+```bash
+git pull origin master
+```
+3. Resolver conflictos si los hay
+
+
 ## Migrar base de datos
 
 <<<<<<< HEAD
@@ -78,7 +92,18 @@ Copiar este codigo y pegarlo en la terminal.
 ```bash
 update-database
 ```
+<<<<<<< HEAD
 >>>>>>> d2c18fee7b4fc274c1cb144d056026a2eebb4c2b
+=======
+
+## Revertir base de datos
+
+Copiar este codigo y pegarlo en la terminal.
+```bash
+update-database 0
+```
+
+>>>>>>> a323e4a3d02a43111935b57f5ab704cf5c30139c
 	
 
 	
