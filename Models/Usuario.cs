@@ -10,18 +10,18 @@ namespace HumanAid.Models
         public int UsuarioId { get; set; }
         [Required]
         [EmailAddress]
-        public string Correo { get; set; }
+        public string? Correo { get; set; }
         [Required]
-        public string Clave { get; set; }
+        public string? Clave { get; set; }
 
         public int RolId { get; set; }
         [ForeignKey("RolId")]
-        public Rol Rol { get; set; }
+        public Rol? Rol { get; set; }
 
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
-        public Voluntario Voluntario{ get; set; }
-        public Socio Socio { get; set; }
+        public Voluntario? Voluntario{ get; set; }
+        public Socio? Socio { get; set; }
 
 
 

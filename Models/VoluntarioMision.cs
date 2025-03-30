@@ -10,11 +10,11 @@ namespace HumanAid.Models
         //Relacion con VoluntarioSanitario
         public int VoluntarioSanitarioId { get; set; }
         [ForeignKey("VoluntarioSanitarioId")]
-        public VoluntarioSanitario VoluntarioSanitario { get; set; }
+        public VoluntarioSanitario? VoluntarioSanitario { get; set; }
 
         //Relacion con MisionHumanitaria
         public int MisionId { get; set; }
         [ForeignKey("MisionId")]
-        public MisionHumanitaria MisionHumanitaria { get; set; }
+        public MisionHumanitaria? MisionHumanitaria { get; set; }
     }
 }
