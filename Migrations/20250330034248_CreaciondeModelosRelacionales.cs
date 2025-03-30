@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HumanAid.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionModelos : Migration
+    public partial class CreaciondeModelosRelacionales : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -185,31 +185,6 @@ namespace HumanAid.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Voluntario",
-                columns: table => new
-                {
-                    VoluntarioId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Direccion = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SedeId = table.Column<int>(type: "int", nullable: false),
-                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Voluntario", x => x.VoluntarioId);
-                    table.ForeignKey(
-                        name: "FK_Voluntario_Sede_SedeId",
-                        column: x => x.SedeId,
-                        principalTable: "Sede",
-                        principalColumn: "SedeId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Socio",
                 columns: table => new
                 {
@@ -248,23 +223,49 @@ namespace HumanAid.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Voluntario",
+                columns: table => new
+                {
+                    VoluntarioId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SedeId = table.Column<int>(type: "int", nullable: false),
+                    FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Voluntario", x => x.VoluntarioId);
+                    table.ForeignKey(
+                        name: "FK_Voluntario_Sede_SedeId",
+                        column: x => x.SedeId,
+                        principalTable: "Sede",
+                        principalColumn: "SedeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Voluntario_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "UsuarioId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "VoluntarioAdministrativo",
                 columns: table => new
                 {
                     VoluntarioAdministrativoId = table.Column<int>(type: "int", nullable: false),
                     Profesion = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Departamento = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    VoluntarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VoluntarioAdministrativo", x => x.VoluntarioAdministrativoId);
-                    table.ForeignKey(
-                        name: "FK_VoluntarioAdministrativo_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VoluntarioAdministrativo_Voluntario_VoluntarioAdministrativoId",
                         column: x => x.VoluntarioAdministrativoId,
@@ -281,17 +282,11 @@ namespace HumanAid.Migrations
                     Profesion = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Disponibilidad = table.Column<bool>(type: "bit", nullable: false),
                     NumeroTrabajosRealizados = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    VoluntarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VoluntarioSanitario", x => x.VoluntarioSanitarioId);
-                    table.ForeignKey(
-                        name: "FK_VoluntarioSanitario_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VoluntarioSanitario_Voluntario_VoluntarioSanitarioId",
                         column: x => x.VoluntarioSanitarioId,
@@ -305,8 +300,7 @@ namespace HumanAid.Migrations
                 columns: table => new
                 {
                     VoluntarioSanitarioId = table.Column<int>(type: "int", nullable: false),
-                    MisionId = table.Column<int>(type: "int", nullable: false),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false)
+                    MisionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -316,12 +310,6 @@ namespace HumanAid.Migrations
                         column: x => x.MisionId,
                         principalTable: "MisionHumanitaria",
                         principalColumn: "MisionId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_VoluntarioMision_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "Usuario",
-                        principalColumn: "UsuarioId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_VoluntarioMision_VoluntarioSanitario_VoluntarioSanitarioId",
@@ -378,8 +366,8 @@ namespace HumanAid.Migrations
                 column: "SedeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VoluntarioAdministrativo_UsuarioId",
-                table: "VoluntarioAdministrativo",
+                name: "IX_Voluntario_UsuarioId",
+                table: "Voluntario",
                 column: "UsuarioId",
                 unique: true);
 
@@ -387,18 +375,6 @@ namespace HumanAid.Migrations
                 name: "IX_VoluntarioMision_MisionId",
                 table: "VoluntarioMision",
                 column: "MisionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VoluntarioMision_UsuarioId",
-                table: "VoluntarioMision",
-                column: "UsuarioId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_VoluntarioSanitario_UsuarioId",
-                table: "VoluntarioSanitario",
-                column: "UsuarioId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -435,16 +411,16 @@ namespace HumanAid.Migrations
                 name: "Envio");
 
             migrationBuilder.DropTable(
-                name: "Usuario");
-
-            migrationBuilder.DropTable(
                 name: "Voluntario");
 
             migrationBuilder.DropTable(
-                name: "Rol");
+                name: "Sede");
 
             migrationBuilder.DropTable(
-                name: "Sede");
+                name: "Usuario");
+
+            migrationBuilder.DropTable(
+                name: "Rol");
         }
     }
 }

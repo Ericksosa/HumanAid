@@ -33,10 +33,14 @@ namespace HumanAid.Models
         public string Telefono { get; set; }
 
         //Relacion con voluntarioAdministrativo
-        public VoluntarioAdministrativo VoluntarioAdministrativo { get; set; }
+        public VoluntarioAdministrativo? VoluntarioAdministrativo { get; set; }
 
         //Relacion con voluntarioSanitario
-        public VoluntarioSanitario VoluntarioSanitario { get; set; }
+        public VoluntarioSanitario? VoluntarioSanitario { get; set; }
+
+        public int UsuarioId { get; set; }
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; }
 
     }
 }

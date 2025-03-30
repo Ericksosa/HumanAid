@@ -17,10 +17,8 @@ namespace HumanAid.Models
 
         //Relación
         public ICollection<VoluntarioMision> VoluntarioMisiones { get; set; }
+        public int VoluntarioId { get; set; }
+        [ForeignKey("VoluntarioId")]
         public Voluntario Voluntario { get; set; }
-
-        public int UsuarioId { get; set; }
-        [ForeignKey("UsuarioId")]
-        public Usuario Usuario { get; set; }
     }
 }
