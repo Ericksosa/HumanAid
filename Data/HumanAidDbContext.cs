@@ -46,7 +46,7 @@ namespace HumanAid.Data
                .WithOne(u => u.Voluntario)
                .HasForeignKey<Voluntario>(v => v.UsuarioId)
                .OnDelete(DeleteBehavior.Restrict);
-
+               
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Socio)
                 .WithOne(s => s.Usuario)

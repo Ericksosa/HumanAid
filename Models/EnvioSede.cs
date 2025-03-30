@@ -11,11 +11,11 @@ namespace HumanAid.Models
         //Relacion Con Envio
         public int EnvioId { get; set; }
         [ForeignKey("EnvioId")]
-        public Envio Envio { get; set; }
+        public Envio? Envio { get; set; }
 
         //Relacion con Sede
         public int SedeId {  get; set; }
         [ForeignKey("SedeId")]
-        public Sede Sede { get; set; }
+        public Sede? Sede { get; set; }
     }
 }

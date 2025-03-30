@@ -23,16 +23,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="voluntariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Voluntarios
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="voluntariosDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Voluntarios" asp-action="Index">Voluntarios</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="VoluntarioAdministrativoes" asp-action="Index">Voluntarios Administrativos</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="VoluntarioSanitarios" asp-action="Index">Voluntarios Sanitarios</a></li>
-                            </ul>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -61,4 +51,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-

@@ -11,17 +11,17 @@ namespace HumanAid.Models
         //Relacion con Envio
         public int EnvioId { get; set; }
         [ForeignKey("EnvioId")]
-        public Envio Envio { get; set; }
+        public Envio? Envio { get; set; }
 
         [Required]
         public DateTime Fecha { get; set; }
         [Required]
-        public string Descripcion { get; set; }
+        public string? Descripcion { get; set; }
         [Required]
         [MaxLength(50, ErrorMessage = "El maximo de caracteres es 50")]
-        public string Estado { get; set; }
+        public string? Estado { get; set; }
 
         //Estableciendo metodos de relación
-        public ICollection<VoluntarioMision> VoluntarioMisiones { get; set; }
+        public ICollection<VoluntarioMision>? VoluntarioMisiones { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using HumanAid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanAid.Migrations
 {
     [DbContext(typeof(HumanAidDbContext))]
-    partial class HumanAidDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250330034248_CreaciondeModelosRelacionales")]
+    partial class CreaciondeModelosRelacionales
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -366,28 +369,22 @@ namespace HumanAid.Migrations
             modelBuilder.Entity("HumanAid.Models.VoluntarioAdministrativo", b =>
                 {
                     b.Property<int>("VoluntarioAdministrativoId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VoluntarioAdministrativoId"));
-
                     b.Property<string>("Departamento")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Profesion")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("VoluntarioId")
-
+                    b.Property<int>("VoluntarioId")
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioAdministrativoId");
-
-                    b.HasIndex("VoluntarioId")
-                        .IsUnique()
-                        .HasFilter("[VoluntarioId] IS NOT NULL");
 
                     b.ToTable("VoluntarioAdministrativo");
                 });
@@ -410,30 +407,23 @@ namespace HumanAid.Migrations
             modelBuilder.Entity("HumanAid.Models.VoluntarioSanitario", b =>
                 {
                     b.Property<int>("VoluntarioSanitarioId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VoluntarioSanitarioId"));
-
-                    b.Property<bool?>("Disponibilidad")
+                    b.Property<bool>("Disponibilidad")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("NumeroTrabajosRealizados")
+                    b.Property<int>("NumeroTrabajosRealizados")
                         .HasColumnType("int");
 
                     b.Property<string>("Profesion")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("VoluntarioId")
-
+                    b.Property<int>("VoluntarioId")
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioSanitarioId");
-
-                    b.HasIndex("VoluntarioId")
-                        .IsUnique()
-                        .HasFilter("[VoluntarioId] IS NOT NULL");
 
                     b.ToTable("VoluntarioSanitario");
                 });
@@ -539,7 +529,7 @@ namespace HumanAid.Migrations
                     b.HasOne("HumanAid.Models.Usuario", "Usuario")
                         .WithOne("Voluntario")
                         .HasForeignKey("HumanAid.Models.Voluntario", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Sede");
@@ -549,12 +539,13 @@ namespace HumanAid.Migrations
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioAdministrativo", b =>
                 {
-                    b.HasOne("HumanAid.Models.Voluntario", "Voluntario")
+                    b.HasOne("HumanAid.Models.Voluntario", "voluntario")
                         .WithOne("VoluntarioAdministrativo")
-                        .HasForeignKey("HumanAid.Models.VoluntarioAdministrativo", "VoluntarioId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("HumanAid.Models.VoluntarioAdministrativo", "VoluntarioAdministrativoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("Voluntario");
+                    b.Navigation("voluntario");
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioMision", b =>
@@ -580,9 +571,9 @@ namespace HumanAid.Migrations
                 {
                     b.HasOne("HumanAid.Models.Voluntario", "Voluntario")
                         .WithOne("VoluntarioSanitario")
-                        .HasForeignKey("HumanAid.Models.VoluntarioSanitario", "VoluntarioId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
+                        .HasForeignKey("HumanAid.Models.VoluntarioSanitario", "VoluntarioSanitarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Voluntario");
                 });
