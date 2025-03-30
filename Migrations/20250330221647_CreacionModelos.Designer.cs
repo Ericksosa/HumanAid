@@ -4,6 +4,7 @@ using HumanAid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanAid.Migrations
 {
     [DbContext(typeof(HumanAidDbContext))]
-    partial class HumanAidDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250330221647_CreacionModelos")]
+    partial class CreacionModelos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -380,7 +383,6 @@ namespace HumanAid.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("VoluntarioId")
-
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioAdministrativoId");
@@ -426,7 +428,6 @@ namespace HumanAid.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("VoluntarioId")
-
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioSanitarioId");
@@ -583,7 +584,6 @@ namespace HumanAid.Migrations
                         .HasForeignKey("HumanAid.Models.VoluntarioSanitario", "VoluntarioId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-
                     b.Navigation("Voluntario");
                 });
 
@@ -633,9 +633,11 @@ namespace HumanAid.Migrations
 
             modelBuilder.Entity("HumanAid.Models.Voluntario", b =>
                 {
-                    b.Navigation("VoluntarioAdministrativo");
+                    b.Navigation("VoluntarioAdministrativo")
+                        .IsRequired();
 
-                    b.Navigation("VoluntarioSanitario");
+                    b.Navigation("VoluntarioSanitario")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioSanitario", b =>

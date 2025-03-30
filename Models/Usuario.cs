@@ -20,10 +20,8 @@ namespace HumanAid.Models
 
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
-        public Voluntario? Voluntario{ get; set; }
-        public Socio? Socio { get; set; }
-
-
+        public Socio Socio { get; set; }
+        public Voluntario Voluntario { get; set; }
 
     }
 }

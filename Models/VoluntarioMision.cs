@@ -15,6 +15,6 @@ namespace HumanAid.Models
         //Relacion con MisionHumanitaria
         public int MisionId { get; set; }
         [ForeignKey("MisionId")]
-        public MisionHumanitaria? MisionHumanitaria { get; set; }
+        public MisionHumanitaria MisionHumanitaria { get; set; }
     }
 }

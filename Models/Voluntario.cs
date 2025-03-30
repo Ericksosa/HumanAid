@@ -32,6 +32,10 @@ namespace HumanAid.Models
         [MaxLength(20, ErrorMessage = "El maximo de caracteres es 20")]
         public string? Telefono { get; set; }
 
+        public int UsuarioId { get; set; }
+        [ForeignKey("UsuarioId")]
+        public Usuario Usuario { get; set; }
+
         //Relacion con voluntarioAdministrativo
         public VoluntarioAdministrativo? VoluntarioAdministrativo { get; set; }
 

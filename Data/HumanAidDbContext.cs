@@ -31,34 +31,22 @@ namespace HumanAid.Data
             // Relaciones de uno a uno
             modelBuilder.Entity<Voluntario>()
                 .HasOne(v => v.VoluntarioAdministrativo)
-                .WithOne(va => va.voluntario)
-                .HasForeignKey<VoluntarioAdministrativo>(va => va.VoluntarioAdministrativoId)
+                .WithOne(va => va.Voluntario)
+                .HasForeignKey<VoluntarioAdministrativo>(va => va.VoluntarioId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Voluntario>()
-               .HasOne(v => v.VoluntarioSanitario)
-               .WithOne(va => va.Voluntario)
-               .HasForeignKey<VoluntarioSanitario>(va => va.VoluntarioSanitarioId)
+                .HasOne(v => v.VoluntarioSanitario)
+                .WithOne(vs => vs.Voluntario)
+                .HasForeignKey<VoluntarioSanitario>(vs => vs.VoluntarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Voluntario>()
+               .HasOne(v => v.Usuario)
+               .WithOne(u => u.Voluntario)
+               .HasForeignKey<Voluntario>(v => v.UsuarioId)
                .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Usuario>()
-            //    .HasOne(u => u.VoluntarioAdministrativo)
-            //    .WithOne(va => va.Usuario)
-            //    .HasForeignKey<VoluntarioAdministrativo>(va => va.UsuarioId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Usuario>()
-            //    .HasOne(u => u.VoluntarioSanitario)
-            //    .WithOne(vs => vs.Usuario)
-            //    .HasForeignKey<VoluntarioSanitario>(vs => vs.UsuarioId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Usuario>()
-            //    .HasOne(u => u.VoluntarioMision)
-            //    .WithOne(vm => vm.Usuario)
-            //    .HasForeignKey<VoluntarioMision>(vm => vm.UsuarioId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
+               
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Socio)
                 .WithOne(s => s.Usuario)
