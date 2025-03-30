@@ -42,9 +42,5 @@ namespace HumanAid.Models
         //Relacion con voluntarioSanitario
         public VoluntarioSanitario? VoluntarioSanitario { get; set; }
 
-        public int UsuarioId { get; set; }
-        [ForeignKey("UsuarioId")]
-        public Usuario? Usuario { get; set; }
-
     }
 }
