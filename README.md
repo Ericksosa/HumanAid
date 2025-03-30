@@ -80,11 +80,21 @@ git pull origin master
 
 ## Migrar base de datos
 
+<<<<<<< HEAD
+	Copiar este codigo y pegarlo en la terminal.
+	
+	```bash
+	update-database
+	```
+=======
 Copiar este codigo y pegarlo en la terminal.
 	
 ```bash
 update-database
 ```
+<<<<<<< HEAD
+>>>>>>> d2c18fee7b4fc274c1cb144d056026a2eebb4c2b
+=======
 
 ## Revertir base de datos
 
@@ -93,6 +103,7 @@ Copiar este codigo y pegarlo en la terminal.
 update-database 0
 ```
 
+>>>>>>> a323e4a3d02a43111935b57f5ab704cf5c30139c
 	
 
 	

@@ -11,11 +11,11 @@ namespace HumanAid.Models
         //Relacion con Envio
         public int EnvioId { get; set; }
         [ForeignKey("EnvioId")]
-        public Envio Envio { get; set; }
+        public Envio? Envio { get; set; }
 
         [Required]
         [MaxLength(100, ErrorMessage = "El maximo de caracteres es 100")]
-        public string Tipo { get; set; }
+        public string? Tipo { get; set; }
         [Required]
         public decimal Peso {  get; set; }
     }

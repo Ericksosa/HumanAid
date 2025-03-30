@@ -7,9 +7,9 @@ namespace HumanAid.Models
         [Key]
         public int RolId { get; set; }
         [Required]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
-        public ICollection<Usuario> Usuarios { get; set; }
+        public ICollection<Usuario>? Usuarios { get; set; }
 
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 

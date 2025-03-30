@@ -41,23 +41,23 @@ namespace HumanAid.Data
                .HasForeignKey<VoluntarioSanitario>(va => va.VoluntarioSanitarioId)
                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.VoluntarioAdministrativo)
-                .WithOne(va => va.Usuario)
-                .HasForeignKey<VoluntarioAdministrativo>(va => va.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Usuario>()
+            //    .HasOne(u => u.VoluntarioAdministrativo)
+            //    .WithOne(va => va.Usuario)
+            //    .HasForeignKey<VoluntarioAdministrativo>(va => va.UsuarioId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.VoluntarioSanitario)
-                .WithOne(vs => vs.Usuario)
-                .HasForeignKey<VoluntarioSanitario>(vs => vs.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Usuario>()
+            //    .HasOne(u => u.VoluntarioSanitario)
+            //    .WithOne(vs => vs.Usuario)
+            //    .HasForeignKey<VoluntarioSanitario>(vs => vs.UsuarioId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.VoluntarioMision)
-                .WithOne(vm => vm.Usuario)
-                .HasForeignKey<VoluntarioMision>(vm => vm.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+            //modelBuilder.Entity<Usuario>()
+            //    .HasOne(u => u.VoluntarioMision)
+            //    .WithOne(vm => vm.Usuario)
+            //    .HasForeignKey<VoluntarioMision>(vm => vm.UsuarioId)
+            //    .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Socio)
