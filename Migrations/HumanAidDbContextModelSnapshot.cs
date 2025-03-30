@@ -350,9 +350,15 @@ namespace HumanAid.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("VoluntarioId");
 
                     b.HasIndex("SedeId");
+
+                    b.HasIndex("UsuarioId")
+                        .IsUnique();
 
                     b.ToTable("Voluntario");
                 });
@@ -372,13 +378,10 @@ namespace HumanAid.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("VoluntarioId")
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioAdministrativoId");
-
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
 
                     b.ToTable("VoluntarioAdministrativo");
                 });
@@ -391,15 +394,9 @@ namespace HumanAid.Migrations
                     b.Property<int>("MisionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("VoluntarioSanitarioId", "MisionId");
 
                     b.HasIndex("MisionId");
-
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
 
                     b.ToTable("VoluntarioMision");
                 });
@@ -420,13 +417,10 @@ namespace HumanAid.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int>("VoluntarioId")
                         .HasColumnType("int");
 
                     b.HasKey("VoluntarioSanitarioId");
-
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
 
                     b.ToTable("VoluntarioSanitario");
                 });
@@ -529,24 +523,24 @@ namespace HumanAid.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("HumanAid.Models.Usuario", "Usuario")
+                        .WithOne("Voluntario")
+                        .HasForeignKey("HumanAid.Models.Voluntario", "UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Sede");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioAdministrativo", b =>
                 {
-                    b.HasOne("HumanAid.Models.Usuario", "Usuario")
-                        .WithOne("VoluntarioAdministrativo")
-                        .HasForeignKey("HumanAid.Models.VoluntarioAdministrativo", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HumanAid.Models.Voluntario", "voluntario")
                         .WithOne("VoluntarioAdministrativo")
                         .HasForeignKey("HumanAid.Models.VoluntarioAdministrativo", "VoluntarioAdministrativoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Usuario");
 
                     b.Navigation("voluntario");
                 });
@@ -559,12 +553,6 @@ namespace HumanAid.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("HumanAid.Models.Usuario", "Usuario")
-                        .WithOne("VoluntarioMision")
-                        .HasForeignKey("HumanAid.Models.VoluntarioMision", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HumanAid.Models.VoluntarioSanitario", "VoluntarioSanitario")
                         .WithMany("VoluntarioMisiones")
                         .HasForeignKey("VoluntarioSanitarioId")
@@ -573,26 +561,16 @@ namespace HumanAid.Migrations
 
                     b.Navigation("MisionHumanitaria");
 
-                    b.Navigation("Usuario");
-
                     b.Navigation("VoluntarioSanitario");
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioSanitario", b =>
                 {
-                    b.HasOne("HumanAid.Models.Usuario", "Usuario")
-                        .WithOne("VoluntarioSanitario")
-                        .HasForeignKey("HumanAid.Models.VoluntarioSanitario", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("HumanAid.Models.Voluntario", "Voluntario")
                         .WithOne("VoluntarioSanitario")
                         .HasForeignKey("HumanAid.Models.VoluntarioSanitario", "VoluntarioSanitarioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Usuario");
 
                     b.Navigation("Voluntario");
                 });
@@ -637,23 +615,15 @@ namespace HumanAid.Migrations
                     b.Navigation("Socio")
                         .IsRequired();
 
-                    b.Navigation("VoluntarioAdministrativo")
-                        .IsRequired();
-
-                    b.Navigation("VoluntarioMision")
-                        .IsRequired();
-
-                    b.Navigation("VoluntarioSanitario")
+                    b.Navigation("Voluntario")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("HumanAid.Models.Voluntario", b =>
                 {
-                    b.Navigation("VoluntarioAdministrativo")
-                        .IsRequired();
+                    b.Navigation("VoluntarioAdministrativo");
 
-                    b.Navigation("VoluntarioSanitario")
-                        .IsRequired();
+                    b.Navigation("VoluntarioSanitario");
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioSanitario", b =>
