@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using HumanAid.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HumanAid.Areas.Administrador.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     [Area("Administrador")]
     public class HomeController : Controller
     {
