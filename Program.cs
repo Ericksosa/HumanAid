@@ -17,11 +17,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrador"));
-    options.AddPolicy("RequireVoluntarioRole", policy => policy.RequireRole("Voluntario"));
-});
+builder.Services.AddAuthorization();
+
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Administrador"));
+//    options.AddPolicy("RequireVoluntarioRole", policy => policy.RequireRole("Voluntario"));
+//});
 
 builder.Services.AddControllersWithViews();
 
@@ -47,7 +49,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
 

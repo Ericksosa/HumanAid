@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HumanAid.Data;
 using HumanAid.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HumanAid.Areas.Administrador.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     [Area("Administrador")]
     public class VoluntariosController : Controller
     {
