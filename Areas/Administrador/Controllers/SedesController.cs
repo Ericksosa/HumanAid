@@ -54,15 +54,28 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SedeId,Nombre,Ciudad,Direccion,Director,FechaFundacion")] Sede sede)
         {
-            if (ModelState.IsValid)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                _context.Add(sede);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    if (string.IsNullOrEmpty(sede.Nombre) || string.IsNullOrEmpty(sede.Ciudad) || string.IsNullOrEmpty(sede.Direccion) || string.IsNullOrEmpty(sede.Director) || sede.FechaFundacion == default)
+                    {
+                        throw new ArgumentException("Todos los campos son obligatorios.");
+                    }
+
+                    _context.Add(sede);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError(string.Empty, $"Error al crear la sede: {ex.Message}");
+                }
             }
             return View(sede);
         }
-
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -79,7 +92,6 @@ namespace HumanAid.Areas.Administrador.Controllers
             return View(sede);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SedeId,Nombre,Ciudad,Direccion,Director,FechaFundacion")] Sede sede)
@@ -89,15 +101,23 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
+                    if (string.IsNullOrEmpty(sede.Nombre) || string.IsNullOrEmpty(sede.Ciudad) || string.IsNullOrEmpty(sede.Direccion) || string.IsNullOrEmpty(sede.Director) || sede.FechaFundacion == default)
+                    {
+                        throw new ArgumentException("Todos los campos son obligatorios.");
+                    }
+
                     _context.Update(sede);
                     await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    await transaction.RollbackAsync();
                     if (!SedeExists(sede.SedeId))
                     {
                         return NotFound();
@@ -107,7 +127,11 @@ namespace HumanAid.Areas.Administrador.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    ModelState.AddModelError(string.Empty, $"Error al editar la sede: {ex.Message}");
+                }
             }
             return View(sede);
         }
