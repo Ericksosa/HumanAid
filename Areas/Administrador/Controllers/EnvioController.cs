@@ -10,9 +10,12 @@ using HumanAid.Models;
 using NuGet.Packaging;
 using X.PagedList.Mvc;
 using X.PagedList.EF;
+using Microsoft.AspNetCore.Authorization;
 
-namespace HumanAid.Controllers
+namespace HumanAid.Areas.Administrador.Controllers
 {
+    [Authorize(Roles = "Administrador")]
+    [Area("Administrador")]
     public class EnvioController : Controller
     {
         private readonly HumanAidDbContext _context;
@@ -27,7 +30,7 @@ namespace HumanAid.Controllers
         public async Task<IActionResult> Index(int? sedeId, int? page)
         {
             int pageSize = 10; // Tamaño de página
-            int pageNumber = (page ?? 1); // Número de página
+            int pageNumber = page ?? 1; // Número de página
 
             // Cargar los envíos e incluir la relación con Sede
             var envios = _context.Envio
