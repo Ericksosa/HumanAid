@@ -1,0 +1,76 @@
+﻿@model HumanAid.Models.Envio
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Editar Envío</h1>
+<br/>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EnvioId" />
+
+            <div class="form-group">
+                <label asp-for="CodigoEnvio" class="control-label"></label>
+                <input asp-for="CodigoEnvio" class="form-control" />
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" />
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Destino" class="control-label"></label>
+                <input asp-for="Destino" class="form-control" />
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="FechaSalida" class="control-label"></label>
+                <input asp-for="FechaSalida" class="form-control" />
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="TipoEnvio" class="control-label"></label>
+                <select asp-for="TipoEnvio" class="form-control">
+                    <option value="Ayuda Material">Ayuda Material</option>
+                    <option value="Humanitaria">Humanitaria</option>
+                </select>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="Sedes" class="control-label">Sedes Organizadoras</label>
+                <select id="Sedes" name="sedeIds[]" class="form-control">
+                    @foreach (var sede in ViewBag.Sedes)
+                    {
+                            <option value="@sede.SedeId">@sede.Nombre</option>
+                    }
+                </select>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="Estado">Estado</label>
+                <select asp-for="Estado" class="form-control">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="Entregado">Entregado</option>
+                </select>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

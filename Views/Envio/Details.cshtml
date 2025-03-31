@@ -1,0 +1,64 @@
+﻿@model HumanAid.Models.Envio
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles del Envío</h1>
+<br/>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label asp-for="CodigoEnvio" class="control-label"></label>
+            <input asp-for="CodigoEnvio" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <label asp-for="Fecha" class="control-label"></label>
+            <input asp-for="Fecha" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <label asp-for="Destino" class="control-label"></label>
+            <input asp-for="Destino" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <label asp-for="FechaSalida" class="control-label"></label>
+            <input asp-for="FechaSalida" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <label asp-for="TipoEnvio" class="control-label"></label>
+            <input asp-for="TipoEnvio" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <label for="Sedes" class="control-label">Sedes Organizadoras</label>
+            <ul class="list-group">
+                @foreach (var sede in ViewBag.Sedes)
+                {
+                <li class="list-group-item">@sede.Nombre</li>
+                }
+            </ul>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label for="Estado">Estado</label>
+            <input asp-for="Estado" class="form-control" readonly />
+        </div>
+        <br/>
+        <div class="form-group">
+            <a asp-action="Index" asp-route-id="@Model.EnvioId" class="btn btn-primary">Aceptar</a>
+            <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+        </div>
+    </div>
+</div>
+<br/>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

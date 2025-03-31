@@ -1,0 +1,96 @@
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<HumanAid.Models.Envio>
+
+@{
+    ViewData["Title"] = "Envios";
+}
+
+<h1>Índice de Envios</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <label for="sedeId">Filtrar por Sede Organizadora:</label>
+    <select name="sedeId" id="sedeId">
+        <option value="">Todas</option>
+        @foreach (var sede in ViewBag.Sedes)
+        {
+                <option value="@sede.SedeId" selected="@(Context.Request.Query["sedeId"] == sede.SedeId.ToString() ? "selected" : null)">
+                @sede.Nombre
+                </option>
+        }
+    </select>
+    <button type="submit">Filtrar</button>
+</form>
+
+<br/>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Destino)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().TipoEnvio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().CodigoEnvio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().FechaSalida)
+            </th>
+            <th>
+                @Html.DisplayName("Sede Organizadora")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destino)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoEnvio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CodigoEnvio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaSalida)
+            </td>
+           <td>
+                @if (item.EnvioSedes != null && item.EnvioSedes.Any())
+                {
+                @string.Join(", ", item.EnvioSedes.Select(s => s.Sede.Nombre))
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EnvioId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.EnvioId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.EnvioId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sedeId = ViewBag.CurrentSedeFilter }))
+</div>
+
