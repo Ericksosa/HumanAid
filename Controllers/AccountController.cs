@@ -1,7 +1,10 @@
 ﻿using HumanAid.Data;
 using HumanAid.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace HumanAid.Controllers
 {
@@ -21,28 +24,53 @@ namespace HumanAid.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(String Correo, string Contraseña)
+        public async Task<IActionResult> Login(string Correo, string Contraseña)
         {
-            var Usuario = _context.Usuario.Include(u => u.Rol).FirstOrDefault(u => u.Correo == Correo && u.Clave == Contraseña);
-            if (Usuario != null)
+            var usuario = await _context.Usuario.Include(u => u.Rol).FirstOrDefaultAsync(u => u.Correo == Correo && u.Clave == Contraseña);
+            if (usuario != null)
             {
-                switch (Usuario.Rol.Nombre)
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, usuario.Correo),
+                    new Claim(ClaimTypes.Role, usuario.Rol.Nombre)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                switch (usuario.Rol.Nombre)
                 {
                     case "Administrador":
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Home", new { area = "Administrador" });
                     case "Socio":
-                        return RedirectToAction("Index", "Socio");
+                        return RedirectToAction("Index", "Home", new { area = "Socio" });
                     case "VoluntarioSanitario":
-                        return RedirectToAction("Index", "VoluntarioSanitario");
+                        return RedirectToAction("Index", "Home", new { area = "VoluntariosSanitarios" });
                     case "VoluntarioAdministrativo":
-                        return RedirectToAction("Index", "VoluntarioAdministrativo");
-
+                        return RedirectToAction("Index", "Home", new { area = "VoluntariosAdministrativos" });
                 }
             }
+
             ViewBag.Mensaje = "Correo o contraseña incorrectos.";
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
+        }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }
+
