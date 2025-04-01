@@ -1,0 +1,27 @@
+﻿@model HumanAid.Models.TipoCuota
+
+@{
+    ViewData["Title"] = "Asignar Socios";
+}
+
+<h1>Asignar Socios a @Model.Nombre</h1>
+
+<form asp-action="AsignarSocios">
+    <input type="hidden" asp-for="TipoCuotaId" />
+
+    <div class="form-group">
+        <label>Seleccione los socios:</label>
+        <ul class="list-group">
+            @foreach (var socio in ViewBag.Socios)
+            {
+                    <li class="list-group-item">
+                        <input type="checkbox" name="SocioIds" value="@socio.SocioId"> @socio.Nombre
+                    </li>
+            }
+        </ul>
+    </div>
+
+    <br/>
+    <button type="submit" class="btn btn-success">Asignar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
