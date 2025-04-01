@@ -26,6 +26,12 @@ namespace HumanAid.Data
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Relaciones de uno a uno
@@ -45,13 +51,13 @@ namespace HumanAid.Data
                .HasOne(v => v.Usuario)
                .WithOne(u => u.Voluntario)
                .HasForeignKey<Voluntario>(v => v.UsuarioId)
-               .OnDelete(DeleteBehavior.Restrict);
-               
+               .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Usuario>()
                 .HasOne(u => u.Socio)
                 .WithOne(s => s.Usuario)
                 .HasForeignKey<Socio>(s => s.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Relaciones de uno a muchos
             modelBuilder.Entity<Voluntario>()

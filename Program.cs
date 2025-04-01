@@ -29,6 +29,14 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+using(var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<HumanAidDbContext>();
+    context.Database.Migrate();
+    FakeDataSeeder.Seed(context);
+}
+
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
