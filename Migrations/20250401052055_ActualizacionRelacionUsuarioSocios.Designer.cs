@@ -4,6 +4,7 @@ using HumanAid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanAid.Migrations
 {
     [DbContext(typeof(HumanAidDbContext))]
-    partial class HumanAidDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250401052055_ActualizacionRelacionUsuarioSocios")]
+    partial class ActualizacionRelacionUsuarioSocios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -544,7 +547,7 @@ namespace HumanAid.Migrations
                     b.HasOne("HumanAid.Models.Usuario", "Usuario")
                         .WithOne("Voluntario")
                         .HasForeignKey("HumanAid.Models.Voluntario", "UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Sede");
