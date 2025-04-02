@@ -29,7 +29,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Envio
         public async Task<IActionResult> Index(int? sedeId, int? page)
         {
-            int pageSize = 10; // Tamaño de página
+            int pageSize = 7; // Tamaño de página
             int pageNumber = page ?? 1; // Número de página
 
             // Cargar los envíos e incluir la relación con Sede
