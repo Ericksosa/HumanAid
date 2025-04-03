@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using HumanAid.Data;
 using HumanAid.Models;
 
-namespace HumanAid.Areas.Socio.Controllers
+namespace HumanAid.Areas.Administrador.Controllers
 {
-    [Area("Socio")]
+    [Area("Administrador")]
     public class SociosController : Controller
     {
         private readonly HumanAidDbContext _context;
@@ -62,7 +62,7 @@ namespace HumanAid.Areas.Socio.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] HumanAid.Models.Socio socio)
+        public async Task<IActionResult> Create([Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] Models.Socio socio)
         {
             ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
             ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
@@ -109,7 +109,7 @@ namespace HumanAid.Areas.Socio.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] HumanAid.Models.Socio socio)
+        public async Task<IActionResult> Edit(int id, [Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] Models.Socio socio)
         {
             if (id != socio.SocioId)
             {
