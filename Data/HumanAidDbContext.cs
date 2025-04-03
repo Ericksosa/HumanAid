@@ -133,5 +133,6 @@ namespace HumanAid.Data
                 .HasForeignKey(vm => vm.MisionId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
+        public DbSet<HumanAid.Models.Transaccion> Transaccion { get; set; } = default!;
     }
 }

@@ -1,0 +1,73 @@
+﻿@model HumanAid.Models.Transaccion
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Transaccion</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TransaccionId" />
+            <div class="form-group">
+                <label asp-for="Monto" class="control-label"></label>
+                <input asp-for="Monto" class="form-control" />
+                <span asp-validation-for="Monto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Metodo" class="control-label"></label>
+                <select asp-for="Metodo" asp-items="Html.GetEnumSelectList<MetodoPago>()" class="form-control"></select>
+                <span asp-validation-for="Metodo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Referencia" class="control-label"></label>
+                <input asp-for="Referencia" class="form-control" />
+                <span asp-validation-for="Referencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaPago" class="control-label"></label>
+                <input asp-for="FechaPago" type="date" class="form-control" />
+                <span asp-validation-for="FechaPago" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tipo" class="control-label"></label>
+                <select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoTransaccion>()" class="form-control"></select>
+                <span asp-validation-for="Tipo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <textarea asp-for="Descripcion" class="form-control"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Socio" class="control-label"></label>
+                <select asp-for="SocioId" class="form-control" asp-items="ViewBag.SocioId"></select>
+                <span asp-validation-for="SocioId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoCuota" class="control-label"></label>
+                <select asp-for="TipoCuotaId" class="form-control" asp-items="ViewBag.TipoCuotaId">
+                    <option value="">-- No aplica --</option>
+                </select>
+                <span asp-validation-for="TipoCuotaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to list</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
