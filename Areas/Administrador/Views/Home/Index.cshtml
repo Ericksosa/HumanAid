@@ -1,6 +1,127 @@
 ﻿@{
     Layout = "~/Areas/Administrador/Views/Shared/_Layout.cshtml";
+    var usuario = User.Identity.Name;
 }
 
-<h2>Home - Administrador</h2>
-<p>Bienvenido al área de administración.</p>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    .card-container {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+    }
+    .chart-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    .btn-custom {
+        border-radius: 8px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+</style>
+
+<div class="container mt-3">
+    <div class="text-center mb-3">
+        <div class="card-container">
+            <h2 class="mb-2">Bienvenido, <strong>@usuario </strong> </h2>
+            <p class="lead text-muted">Visualiza las estadísticas generales de los socios.</p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card-container">
+                <h4 class="chart-title">Distribución de Socios por Sede</h4>
+                <div id="graficoSedes"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-container">
+                <h4 class="chart-title">Tipos de Cuota por Sede</h4>
+                <div id="graficoCuotasSedes"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+        <div class="col-md-12">
+            <div class="card-container">
+                <h4 class="chart-title">Tipos de Cuota por Socios</h4>
+                <div id="graficoCuotasSeries"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center d-flex justify-content-center gap-3">
+         <a href="@Url.Action("ExportarExcel", "Estadistica")" class="btn btn-outline-success btn-custom"> <!-- Boton de excel -->
+            <i class="fas fa-file-excel"></i> Descargar Excel
+        </a>
+        <a href="@Url.Action("ExportarPDF", "Estadistica")" class="btn btn-outline-danger btn-custom">   <!-- Boton de PDF -->
+            <i class="fas fa-file-pdf"></i> Descargar PDF
+        </a>
+    </div>
+</div>
+
+<script>
+  var datos = @Html.Raw(Json.Serialize(Model));
+  console.log("Datos recibidos:", datos);
+
+  var sedes = {}, cuotas = {}, cuotasSedes = {}; // Dandole de comer al Render
+  var sedesUnicas = new Set();
+  var cuotasUnicas = new Set();
+
+  datos.forEach(item => {
+      sedesUnicas.add(item.sede);
+      cuotasUnicas.add(item.tipoCuota);
+
+      if (!sedes[item.sede]) sedes[item.sede] = 0;
+      sedes[item.sede] += item.totalSocios;
+
+      if (!cuotasSedes[item.tipoCuota]) cuotasSedes[item.tipoCuota] = {};
+      if (!cuotasSedes[item.tipoCuota][item.sede]) cuotasSedes[item.tipoCuota][item.sede] = 0;
+      cuotasSedes[item.tipoCuota][item.sede] += item.totalSocios;
+
+      if (!cuotas[item.tipoCuota]) cuotas[item.tipoCuota] = 0;
+      cuotas[item.tipoCuota] += item.totalSocios;
+  });
+
+  sedesUnicas = Array.from(sedesUnicas);
+  cuotasUnicas = Array.from(cuotasUnicas);
+
+  var seriesGeneral = cuotasUnicas.map(cuota => ({
+      name: cuota,
+      data: sedesUnicas.map(sede => cuotasSedes[cuota][sede] || 0)
+  }));
+
+  new ApexCharts(document.querySelector("#graficoSedes"), {  // Primer Grafico
+      chart: { type: 'bar', height: 300 },
+      colors: ['#008FFB'],
+      series: [{ name: 'Total Socios', data: Object.values(sedes) }],
+      xaxis: { categories: sedesUnicas }
+  }).render();
+
+  new ApexCharts(document.querySelector("#graficoCuotasSedes"), { // Segundo Grafico
+      chart: { type: 'bar', height: 300, stacked: true },
+      colors: ['#00E396', '#FF4560', '#775DD0'],
+      series: seriesGeneral,
+      xaxis: { categories: sedesUnicas }
+  }).render();
+
+  new ApexCharts(document.querySelector("#graficoCuotasSeries"), {
+      chart: { type: 'pie', height: 300 },
+      colors: ['#FEB019', '#008FFB', '#FF4560', '#775DD0'],
+      series: Object.values(cuotas),
+      labels: cuotasUnicas
+  }).render();
+</script>

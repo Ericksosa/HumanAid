@@ -45,7 +45,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("EnvioId");
 
-                    b.ToTable("Alimento");
+                    b.ToTable("Alimento", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Envio", b =>
@@ -83,7 +83,7 @@ namespace HumanAid.Migrations
 
                     b.HasKey("EnvioId");
 
-                    b.ToTable("Envio");
+                    b.ToTable("Envio", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.EnvioSede", b =>
@@ -98,7 +98,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("SedeId");
 
-                    b.ToTable("EnvioSede");
+                    b.ToTable("EnvioSede", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Medicamento", b =>
@@ -129,7 +129,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("EnvioId");
 
-                    b.ToTable("Medicamento");
+                    b.ToTable("Medicamento", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.MisionHumanitaria", b =>
@@ -159,7 +159,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("EnvioId");
 
-                    b.ToTable("MisionHumanitaria");
+                    b.ToTable("MisionHumanitaria", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Rol", b =>
@@ -179,7 +179,7 @@ namespace HumanAid.Migrations
 
                     b.HasKey("RolId");
 
-                    b.ToTable("Rol");
+                    b.ToTable("Rol", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Sede", b =>
@@ -215,7 +215,7 @@ namespace HumanAid.Migrations
 
                     b.HasKey("SedeId");
 
-                    b.ToTable("Sede");
+                    b.ToTable("Sede", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Socio", b =>
@@ -263,7 +263,7 @@ namespace HumanAid.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("Socio");
+                    b.ToTable("Socio", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.TipoCuota", b =>
@@ -288,7 +288,7 @@ namespace HumanAid.Migrations
 
                     b.HasKey("TipoCuotaId");
 
-                    b.ToTable("TipoCuota");
+                    b.ToTable("TipoCuota", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Usuario", b =>
@@ -317,7 +317,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Usuario");
+                    b.ToTable("Usuario", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Voluntario", b =>
@@ -367,7 +367,7 @@ namespace HumanAid.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("Voluntario");
+                    b.ToTable("Voluntario", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioAdministrativo", b =>
@@ -395,7 +395,7 @@ namespace HumanAid.Migrations
                         .IsUnique()
                         .HasFilter("[VoluntarioId] IS NOT NULL");
 
-                    b.ToTable("VoluntarioAdministrativo");
+                    b.ToTable("VoluntarioAdministrativo", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioMision", b =>
@@ -410,7 +410,7 @@ namespace HumanAid.Migrations
 
                     b.HasIndex("MisionId");
 
-                    b.ToTable("VoluntarioMision");
+                    b.ToTable("VoluntarioMision", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.VoluntarioSanitario", b =>
@@ -440,7 +440,7 @@ namespace HumanAid.Migrations
                         .IsUnique()
                         .HasFilter("[VoluntarioId] IS NOT NULL");
 
-                    b.ToTable("VoluntarioSanitario");
+                    b.ToTable("VoluntarioSanitario", (string)null);
                 });
 
             modelBuilder.Entity("HumanAid.Models.Alimento", b =>

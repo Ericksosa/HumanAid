@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HumanAid.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HumanAid.Areas.Administrador.Controllers
@@ -10,5 +11,19 @@ namespace HumanAid.Areas.Administrador.Controllers
         {
             return View();
         }
+
+        private readonly EstadisticasService _estadisticasService;
+
+        public SocioController(EstadisticasService estadisticasService)
+        {
+            _estadisticasService = estadisticasService;
+        }
+
+        public IActionResult Estadisticas()
+        {
+            var datos = _estadisticasService.ObtenerEstadisticas();
+            return View(datos);
+        }
+
     }
 }
