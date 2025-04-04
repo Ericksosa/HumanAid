@@ -25,6 +25,8 @@ namespace HumanAid.Data
         public DbSet<VoluntarioSanitario> VoluntarioSanitario { get; set; }
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Permiso> Permisos { get; set; } // Sara
+        public DbSet<RolPermiso> RolPermisos { get; set; } // Sara
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -132,6 +134,22 @@ namespace HumanAid.Data
                 .WithMany(mh => mh.VoluntarioMisiones)
                 .HasForeignKey(vm => vm.MisionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Relaciones de muchos a muchos entre Rol y Permiso, revisen al favor y gracias
+            modelBuilder.Entity<RolPermiso>()
+                .HasKey(rp => new { rp.RolId, rp.PermisoId });
+
+            modelBuilder.Entity<RolPermiso>()
+                .HasOne(rp => rp.Rol)
+                .WithMany(r => r.RolPermisos)
+                .HasForeignKey(rp => rp.RolId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<RolPermiso>()
+                .HasOne(rp => rp.Permiso)
+                .WithMany(p => p.RolPermisos)
+                .HasForeignKey(rp => rp.PermisoId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<HumanAid.Models.Transaccion> Transaccion { get; set; } = default!;
     }

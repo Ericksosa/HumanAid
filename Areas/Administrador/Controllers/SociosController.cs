@@ -51,11 +51,24 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Socio/Socios/Create
         public IActionResult Create()
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad");
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave");
+            var usuariosDisponibles = _context.Usuario
+                .Where(u =>
+                    !_context.Socio.Any(s => s.UsuarioId == u.UsuarioId) &&
+                    !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId)
+                )
+                .ToList();
+
+            if (!usuariosDisponibles.Any())
+            {
+                TempData["NoUsuariosDisponibles"] = "No hay usuarios disponibles para asignar como socios.";
+            }
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre");
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(usuariosDisponibles, "UsuarioId", "Correo");
             return View();
         }
+
 
         // POST: Socio/Socios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -64,13 +77,26 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] Models.Socio socio)
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(
+                _context.Usuario
+                    .Where(u =>
+                        !_context.Socio.Any(s => s.UsuarioId == u.UsuarioId) &&
+                        !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId)),
+                "UsuarioId", "Correo", socio.UsuarioId
+            );
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                if (_context.Socio.Any(s => s.UsuarioId == socio.UsuarioId) ||
+                    _context.Voluntario.Any(v => v.UsuarioId == socio.UsuarioId))
+                {
+                    ModelState.AddModelError("UsuarioId", "El usuario seleccionado ya está asignado a otro socio o voluntario.");
+                    return View(socio);
+                }
+
                 _context.Add(socio);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -98,9 +124,23 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 return NotFound();
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+
+            var usuariosDisponibles = _context.Usuario
+                .Where(u =>
+                    (!_context.Socio.Any(s => s.UsuarioId == u.UsuarioId) &&
+                     !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId)) ||
+                     u.UsuarioId == socio.UsuarioId
+                )
+                .ToList();
+
+            if (!usuariosDisponibles.Any())
+            {
+                ViewData["NoUsuariosDisponibles"] = "No hay usuarios disponibles para asignar como socios.";
+            }
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(usuariosDisponibles, "UsuarioId", "Correo", socio.UsuarioId);
             return View(socio);
         }
 
@@ -116,13 +156,27 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(
+                _context.Usuario
+                    .Where(u =>
+                        (!_context.Socio.Any(s => s.UsuarioId == u.UsuarioId) &&
+                         !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId)) ||
+                        u.UsuarioId == socio.UsuarioId), 
+                "UsuarioId", "Correo", socio.UsuarioId
+            );
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                if (_context.Socio.Any(s => s.UsuarioId == socio.UsuarioId && s.SocioId != socio.SocioId) ||
+                    _context.Voluntario.Any(v => v.UsuarioId == socio.UsuarioId))
+                {
+                    ModelState.AddModelError("UsuarioId", "El usuario seleccionado ya está asignado a otro socio o voluntario.");
+                    return View(socio);
+                }
+
                 _context.Update(socio);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -136,6 +190,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return View(socio);
             }
         }
+
 
         // GET: Socio/Socios/Delete/5
         public async Task<IActionResult> Delete(int? id)

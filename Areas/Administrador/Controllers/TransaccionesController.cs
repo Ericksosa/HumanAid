@@ -62,15 +62,24 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TransaccionId,Monto,Metodo,Referencia,FechaPago,Tipo,Descripcion,SocioId,TipoCuotaId")] Transaccion transaccion)
         {
-            if (ModelState.IsValid)
+            ViewData["SocioId"] = new SelectList(_context.Socio, "SocioId", "Nombre", transaccion.SocioId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", transaccion.TipoCuotaId);
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
                 _context.Add(transaccion);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SocioId"] = new SelectList(_context.Socio, "SocioId", "Nombre", transaccion.SocioId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", transaccion.TipoCuotaId);
-            return View(transaccion);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error al crear la transacción: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar la transacción.");
+                return View(transaccion);
+            }
         }
 
         // GET: Administrador/Transacciones/Edit/5
@@ -103,29 +112,24 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(transaccion);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TransaccionExists(transaccion.TransaccionId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
             ViewData["SocioId"] = new SelectList(_context.Socio, "SocioId", "Nombre", transaccion.SocioId);
             ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", transaccion.TipoCuotaId);
-            return View(transaccion);
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                _context.Update(transaccion);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error al editar la transacción: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar los cambios.");
+                return View(transaccion);
+            }
         }
 
         // GET: Administrador/Transacciones/Delete/5
@@ -153,19 +157,25 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var transaccion = await _context.Transaccion.FindAsync(id);
-            if (transaccion != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Transaccion.Remove(transaccion);
+                var transaccion = await _context.Transaccion.FindAsync(id);
+                if (transaccion != null)
+                {
+                    _context.Transaccion.Remove(transaccion);
+                    await _context.SaveChangesAsync();
+                }
+                await transaction.CommitAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool TransaccionExists(int id)
-        {
-            return _context.Transaccion.Any(e => e.TransaccionId == id);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error al eliminar la transacción: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar la transacción.");
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

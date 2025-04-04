@@ -29,17 +29,14 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var rol = await _context.Rol
+                .Include(r => r.RolPermisos)
+                .ThenInclude(rp => rp.Permiso)
                 .FirstOrDefaultAsync(m => m.RolId == id);
-            if (rol == null)
-            {
-                return NotFound();
-            }
+
+            if (rol == null) return NotFound();
 
             return View(rol);
         }
@@ -47,21 +44,30 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Roles/Create
         public IActionResult Create()
         {
+            ViewBag.Permisos = _context.Permisos.ToList();
             return View();
         }
 
         // POST: Administrador/Roles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RolId,Nombre,FechaRegistro")] Rol rol)
+        public async Task<IActionResult> Create([Bind("RolId,Nombre,FechaRegistro")] Rol rol, List<int> permisosSeleccionados)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 _context.Add(rol);
                 await _context.SaveChangesAsync();
+
+                foreach (var permisoId in permisosSeleccionados)
+                {
+                    _context.RolPermisos.Add(new RolPermiso { RolId = rol.RolId, PermisoId = permisoId });
+                }
+                await _context.SaveChangesAsync();
+
                 await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -70,6 +76,8 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await transaction.RollbackAsync();
                 Console.WriteLine($"Error al crear el rol: {ex.Message}");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el rol.");
+
+                ViewBag.Permisos = _context.Permisos.ToList();
                 return View(rol);
             }
         }
@@ -77,16 +85,16 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var rol = await _context.Rol.FindAsync(id);
-            if (rol == null)
-            {
-                return NotFound();
-            }
+            var rol = await _context.Rol
+                .Include(r => r.RolPermisos)
+                .ThenInclude(rp => rp.Permiso)
+                .FirstOrDefaultAsync(r => r.RolId == id);
+
+            if (rol == null) return NotFound();
+
+            ViewBag.Permisos = _context.Permisos.ToList();
             return View(rol);
         }
 
@@ -95,7 +103,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RolId,Nombre,FechaRegistro")] Rol rol)
+        public async Task<IActionResult> Edit(int id, [Bind("RolId,Nombre,FechaRegistro")] Rol rol, List<int> permisosSeleccionados)
         {
             if (id != rol.RolId)
             {
@@ -107,6 +115,21 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 _context.Update(rol);
                 await _context.SaveChangesAsync();
+
+                var rolActual = await _context.Rol
+                    .Include(r => r.RolPermisos)
+                    .FirstOrDefaultAsync(r => r.RolId == id);
+
+                if (rolActual != null)
+                {
+                    rolActual.RolPermisos.Clear();
+                    foreach (var permisoId in permisosSeleccionados)
+                    {
+                        rolActual.RolPermisos.Add(new RolPermiso { RolId = id, PermisoId = permisoId });
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
                 await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -115,6 +138,8 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await transaction.RollbackAsync();
                 Console.WriteLine($"Error al editar el rol: {ex.Message}");
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al editar el rol.");
+
+                ViewBag.Permisos = _context.Permisos.ToList();
                 return View(rol);
             }
         }
@@ -122,17 +147,14 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var rol = await _context.Rol
+                .Include(r => r.RolPermisos)
+                .ThenInclude(rp => rp.Permiso)
                 .FirstOrDefaultAsync(m => m.RolId == id);
-            if (rol == null)
-            {
-                return NotFound();
-            }
+
+            if (rol == null) return NotFound();
 
             return View(rol);
         }
@@ -162,5 +184,23 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+
+        // GET: Administrador/Roles/EditarPermisos
+        public async Task<IActionResult> EditarPermisos(int id)
+        {
+            var rol = await _context.Rol
+                .Include(r => r.RolPermisos)
+                .ThenInclude(rp => rp.Permiso)
+                .FirstOrDefaultAsync(r => r.RolId == id);
+
+            if (rol == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Permisos = await _context.Permisos.ToListAsync();
+            return View(rol);
+        }
+
     }
 }

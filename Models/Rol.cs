@@ -10,7 +10,7 @@ namespace HumanAid.Models
         public string? Nombre { get; set; }
 
         public ICollection<Usuario>? Usuarios { get; set; }
-
+        public ICollection<RolPermiso>? RolPermisos { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
     }
