@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HumanAid.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 </head>
 <body>
     <header>
@@ -38,16 +37,19 @@
                             <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Sedes" asp-action="Index">Sedes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Envio" asp-action="Index">Envío</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Administrador" asp-controller="TipoCuota" asp-action="Index">Cuotas</a>
+                            <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Envio" asp-action="Index">Envíos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Socios" asp-action="Index">Socios</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Roles" asp-action="Index">Gestión de Roles</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="verMasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ver más
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="verMasDropdown">
+                                <li><a class="dropdown-item" asp-area="Administrador" asp-controller="TipoCuota" asp-action="Index">Cuotas</a></li>
+                                <li><a class="dropdown-item" asp-area="Administrador" asp-controller="Roles" asp-action="Index">Gestión de Roles</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
@@ -76,6 +78,7 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
 
 
 
