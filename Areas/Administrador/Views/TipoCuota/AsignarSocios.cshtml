@@ -10,16 +10,27 @@
     <input type="hidden" asp-for="TipoCuotaId" />
 
     <div class="form-group">
-        <label>Seleccione los socios:</label>
-        <ul class="list-group">
-            @foreach (var socio in ViewBag.Socios)
-            {
-                    <li class="list-group-item">
-                        <input type="checkbox" name="SocioIds" value="@socio.SocioId"> @socio.Nombre
-                    </li>
-            }
-        </ul>
-    </div>
+        <label class="form-label fw-bold">Seleccione los socios:</label>    <!-- Mejor vistazo graficos a la lista de los socios -->
+
+        @if (ViewBag.Socios == null || !((List<Socio>)ViewBag.Socios).Any())
+        {
+            <p class="text-danger">No hay socios disponibles para asignar.</p>
+        }
+        else
+        {
+            <div class="card shadow-sm p-3">
+                <div class="list-group">
+                    @foreach (var socio in ViewBag.Socios)
+                    {
+                            <label class="list-group-item d-flex align-items-center">
+                                <input type="checkbox" name="SocioIds" value="@socio.SocioId" class="form-check-input me-2">
+                                <span class="fw-semibold">@socio.Nombre</span>
+                            </label>
+                    }
+                </div>
+            </div>
+        }
+</div>
     <br/>
     <button type="submit" class="btn btn-success">Asignar</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>

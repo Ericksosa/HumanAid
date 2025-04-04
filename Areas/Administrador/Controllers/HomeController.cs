@@ -21,30 +21,24 @@ namespace HumanAid.Areas.Administrador.Controllers
         public HomeController(ILogger<HomeController> logger, EstadisticasService estadisticasService, HumanAidDbContext context)
         {
             _logger = logger;
-            _estadisticasService = estadisticasService; // Inyectado correctamente
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var datos = _estadisticasService.ObtenerEstadisticas();
-            return View(datos);
+            var totalSocios = _context.Socio.Count();
+            var totalEnvios = _context.Envio.Count();
+            var totalSedes = _context.Sede.Count();
+            var totalVoluntarios = _context.Voluntario.Count();
+
+            ViewBag.TotalSocios = totalSocios;
+            ViewBag.TotalEnvios = totalEnvios;
+            ViewBag.TotalSedes = totalSedes;
+            ViewBag.TotalVoluntarios = totalVoluntarios;
+
+            return View();
         }
 
-        public IActionResult Estadisticas()
-        {
-            var datos = _context.Socio
-                .GroupBy(s => new { SedeNombre = s.Sede.Nombre, TipoCuotaNombre = s.TipoCuota.Nombre, s.TipoCuota.Importe }) // Renamed properties to avoid duplicate names
-                .Select(g => new {
-                    Sede = g.Key.SedeNombre,
-                    TipoCuota = g.Key.TipoCuotaNombre,
-                    TotalSocios = g.Count(),
-                    ImporteCuota = g.Key.Importe // Usamos Importe como referencia en lugar de Serie
-                })
-                .ToList();
-
-            return View(datos);
-        }
 
         public IActionResult Privacy()
         {
