@@ -25,7 +25,8 @@ namespace HumanAid.Data
         public DbSet<VoluntarioSanitario> VoluntarioSanitario { get; set; }
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
-
+        public object Seguimiento { get; internal set; }
+        public IEnumerable<object> Donacion { get; internal set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
