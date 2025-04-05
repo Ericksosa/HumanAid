@@ -1,0 +1,91 @@
+﻿@model Pago
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SocioId" class="control-label"></label>
+                <select asp-for="SocioId" class="form-control" asp-items="@(new SelectList(ViewData["SocioId"] as List<SelectListItem>, "Value", "Text"))" id="SocioId"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tipo de Cuota</label>
+                <input type="text" class="form-control" id="TipoCuotaTexto" readonly value="@ViewData["TipoCuotaTexto"]" />
+                <input type="hidden" asp-for="TipoCuotaId" id="TipoCuotaId" />
+            </div>
+            <div class="form-group">
+                <label asp-for="MontoCuota" class="control-label"></label>
+                <input asp-for="MontoCuota" class="form-control" id="MontoCuota" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="CantidadCuotas" class="control-label"></label>
+                <input asp-for="CantidadCuotas" class="form-control" />
+                <span asp-validation-for="CantidadCuotas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaPago" class="control-label"></label>
+                <input asp-for="FechaPago" class="form-control" />
+                <span asp-validation-for="FechaPago" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("SocioId").addEventListener("change", function () {
+            actualizarDatosCuota(this.value);
+        });
+
+        function actualizarDatosCuota(socioId) {
+            if (socioId) {
+                fetch(`@Url.Action("ObtenerDatosCuota", "Pagos", new { area = "Socio" })?socioId=${socioId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById("TipoCuotaTexto").value = data.tipoCuota;
+                            document.getElementById("TipoCuotaId").value = data.tipoCuotaId;
+                            document.getElementById("MontoCuota").value = data.montoCuota;
+                        } else {
+                            alert(data.message);
+                            document.getElementById("TipoCuotaTexto").value = "";
+                            document.getElementById("TipoCuotaId").value = "";
+                            document.getElementById("MontoCuota").value = "";
+                        }
+                    })
+                    .catch(err => console.error("Error:", err));
+            } else {
+                document.getElementById("TipoCuotaTexto").value = "";
+                document.getElementById("TipoCuotaId").value = "";
+                document.getElementById("MontoCuota").value = "";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const socioInicial = document.getElementById("SocioId").value;
+            actualizarDatosCuota(socioInicial);
+        });
+    </script>
+
+
+}

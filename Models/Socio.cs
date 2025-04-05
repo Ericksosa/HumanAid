@@ -34,5 +34,6 @@ namespace HumanAid.Models
         public Usuario? Usuario { get; set; }
 
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public ICollection<Pago>? Pagos { get; set; }
     }
 }

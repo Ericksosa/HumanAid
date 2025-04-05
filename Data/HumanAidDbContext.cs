@@ -25,6 +25,8 @@ namespace HumanAid.Data
         public DbSet<VoluntarioSanitario> VoluntarioSanitario { get; set; }
         public DbSet<Rol> Rol { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Pago> Pago { get; set; }
+        public DbSet<Gastos> Gastos { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -100,6 +102,24 @@ namespace HumanAid.Data
                 .HasOne(u => u.Rol)
                 .WithMany(r => r.Usuarios)
                 .HasForeignKey(u => u.RolId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Pago>()
+                .HasOne(p => p.Socio)
+                .WithMany(s => s.Pagos)
+                .HasForeignKey(p => p.SocioId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Pago>()
+                .HasOne(p => p.TipoCuota)
+                .WithMany(tc => tc.Pagos)
+                .HasForeignKey(p => p.TipoCuotaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Gastos>()
+                .HasOne(g => g.Sede)
+                .WithMany(s => s.Gastos)
+                .HasForeignKey(g => g.SedeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Relaciones de muchos a muchos
