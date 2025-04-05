@@ -1,0 +1,80 @@
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<HumanAid.Models.Envio>
+
+@{
+    ViewData["Title"] = "Seguimiento de Donaciones";
+}
+
+<h2>Seguimiento de Donaciones</h2>
+
+<form asp-action="Index" method="get">
+    <label>Tipo de Donación:</label>
+    <select name="tipoDonacion">
+        <option value="">Todos</option>
+        @if (ViewBag.Envios != null)
+        {
+            @foreach (var envio in ViewBag.Envios)
+            {
+                <option value="@envio.TipoEnvio" selected="@(ViewBag.CurrentTipoDonacion == envio.TipoEnvio ? "selected" : null)">
+                    @envio.TipoEnvio
+                </option>
+            }
+        }
+    </select>
+
+    <label>Código:</label>
+    <select name="destino">
+        <option value="">Todos</option>
+        @if (ViewBag.Envios != null)
+        {
+            @foreach (var envio in ViewBag.Envios)
+            {
+                <option value="@envio.CodigoEnvio" selected="@(ViewBag.CurrentDestino == envio.CodigoEnvio ? "selected" : null)">
+                    @envio.CodigoEnvio
+                </option>
+            }
+        }
+    </select>
+
+    <button type="submit">Filtrar</button>
+</form>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Destino</th>
+            <th>Estado</th>
+            <th>Codigo</th>
+            <th>Fecha</th>
+            <th>Fecha Salida</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.TipoEnvio)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Destino)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CodigoEnvio)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
+                    <td>@Html.DisplayFor(modelItem => item.FechaSalida)</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No hay envíos disponibles.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,envioId = ViewBag.CurrentSedeFilter }))
+</div>

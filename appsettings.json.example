@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=;(localdb)\\MSSQLLocalDB;User Id=myUsername;Password=myPassword;"
+    "DefaultConnection": "Server=DESKTOP-GF6ACM8;Database=HumanAid;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
   "Logging": {
     "LogLevel": {
