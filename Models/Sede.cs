@@ -25,5 +25,6 @@ namespace HumanAid.Models
         public ICollection<EnvioSede>? EnvioSedes { get; set; }
         public ICollection<Voluntario>? Voluntarios { get; set; }
         public ICollection<Socio>? Socios { get; set; }
+        public ICollection<Gastos>? Gastos { get; set; }
     }
 }
