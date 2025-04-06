@@ -51,11 +51,29 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Socio/Socios/Create
         public IActionResult Create()
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad");
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave");
+            // Filtrar usuarios que tienen el rol de "Socio" y que no están registrados como socios
+            var usuariosSociosDisponibles = _context.Usuario
+                .Include(u => u.Rol)
+                .Where(u => u.Rol.Nombre == "Socio" && !_context.Socio.Any(s => s.UsuarioId == u.UsuarioId))
+                .ToList();
+
+            // Verificar si no hay usuarios disponibles
+            if (!usuariosSociosDisponibles.Any())
+            {
+                // Mostrar un mensaje de alerta y permanecer en la vista Index
+                TempData["Alerta"] = "No hay usuarios disponibles para asignar como socios. Por favor, crea usuarios primero.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Configurar los desplegables para la vista si hay usuarios disponibles
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre");
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(usuariosSociosDisponibles, "UsuarioId", "Correo");
+
             return View();
         }
+
+
 
         // POST: Socio/Socios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -64,9 +82,9 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SocioId,Nombre,FechaNacimiento,CuentaBancaria,FechaPago,TipoCuotaId,SedeId,UsuarioId,FechaRegistro")] Models.Socio socio)
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Correo", socio.UsuarioId);
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -98,9 +116,9 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 return NotFound();
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Correo", socio.UsuarioId);
             return View(socio);
         }
 
@@ -116,9 +134,9 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", socio.SedeId);
-            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Descripcion", socio.TipoCuotaId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", socio.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", socio.SedeId);
+            ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", socio.TipoCuotaId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Correo", socio.UsuarioId);
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             try

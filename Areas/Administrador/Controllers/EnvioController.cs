@@ -128,6 +128,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 // Confirmar la transacción
                 await transaction.CommitAsync();
+                TempData["SuccessMessage"] = "Envio creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -142,7 +143,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 ModelState.AddModelError("", ex.Message);
 
                 RecargarSede(); // Llamar a la funcion recargar sede
-
+                TempData["ErrorMessage"] = "Ocurrió un error al crear el envio.";
                 return View(envio);
             }
         }
@@ -221,6 +222,8 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Update(envioToUpdate);
                 await _context.SaveChangesAsync();
 
+                TempData["SuccessMessage"] = "Envio editado correctamente.";
+
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -237,6 +240,7 @@ namespace HumanAid.Areas.Administrador.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
+                TempData["ErrorMessage"] = "Ocurrió un error al editar el envio.";
                 RecargarSede(); // Recargar la lista de sedes
                 return View(envio);
             }
@@ -255,7 +259,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
             var envio = await _context.Envio
-                .Include(e => e.EnvioSedes) // Incluir relaciones si las necesitas mostrar
+                .Include(e => e.EnvioSedes) 
                 .ThenInclude(es => es.Sede)
                 .FirstOrDefaultAsync(m => m.EnvioId == id);
 

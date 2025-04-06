@@ -27,15 +27,20 @@
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="donarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Donar
                             </a>
+
                             <ul class="dropdown-menu" aria-labelledby="donarDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Alimentoes" asp-action="Index">Donar Alimentos</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Medicamentoes" asp-action="Index">Donar Medicamentos</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Seguimiento" asp-action="Index">Historial de donaciones</a>
+                        </li>
+                    
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                         </li>
-                       </ul>
+                    </ul>
                 </div>
             </div>
         </nav>

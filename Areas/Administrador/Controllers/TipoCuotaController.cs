@@ -28,7 +28,9 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            ViewBag.Socios = _context.Socio.ToList(); // Lista de socios para seleccionar
+            ViewBag.Socios = _context.Socio
+                            .Where(s => s.TipoCuotaId != id) // Aqui, se buscan los socios que no tienen la cuota seleccionada
+                            .ToList();
             return View(cuota);
         }
 
@@ -72,6 +74,7 @@ namespace HumanAid.Areas.Administrador.Controllers
             // Redirigir de vuelta a la lista
             return RedirectToAction("Index");
         }
+
 
         // GET: Administrador/TipoCuota
         public async Task<IActionResult> Index()
