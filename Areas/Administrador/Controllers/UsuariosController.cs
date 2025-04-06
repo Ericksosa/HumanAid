@@ -21,10 +21,24 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Administrador/Usuarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchCorreo, int? RolId)
         {
-            var humanAidDbContext = _context.Usuario.Include(u => u.Rol);
-            return View(await humanAidDbContext.ToListAsync());
+            ViewBag.Roles = await _context.Rol.ToListAsync();
+
+            var usuariosQuery = _context.Usuario.Include(u => u.Rol).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchCorreo))
+            {
+                usuariosQuery = usuariosQuery.Where(u => u.Correo.Contains(searchCorreo));
+            }
+
+            if (RolId.HasValue)
+            {
+                usuariosQuery = usuariosQuery.Where(u => u.RolId == RolId.Value);
+            }
+
+            var usuarios = await usuariosQuery.ToListAsync();
+            return View(usuarios);
         }
 
         // GET: Administrador/Usuarios/Details/5
@@ -119,7 +133,6 @@ namespace HumanAid.Areas.Administrador.Controllers
                     return NotFound();
                 }
 
-                // Actualizar los datos del usuario existente
                 usuarioExistente.Correo = usuario.Correo;
                 usuarioExistente.Clave = usuario.Clave;
                 usuarioExistente.RolId = usuario.RolId;

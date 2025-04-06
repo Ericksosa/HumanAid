@@ -21,10 +21,19 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Administrador/Gastos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? SedeId)
         {
-            var humanAidDbContext = _context.Gastos.Include(g => g.Sede);
-            return View(await humanAidDbContext.ToListAsync());
+            ViewBag.Sedes = await _context.Sede.ToListAsync();
+
+            var gastosQuery = _context.Gastos.Include(g => g.Sede).AsQueryable();
+
+            if (SedeId.HasValue)
+            {
+                gastosQuery = gastosQuery.Where(g => g.SedeId == SedeId.Value);
+            }
+
+            var gastos = await gastosQuery.ToListAsync();
+            return View(gastos);
         }
 
         // GET: Administrador/Gastos/Details/5
@@ -49,7 +58,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Gastos/Create
         public IActionResult Create()
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad");
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre");
             return View();
         }
 
@@ -60,13 +69,42 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGastos,Descripcion,Importe,FechaGasto,SedeId")] Gastos gastos)
         {
-            if (ModelState.IsValid)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
+                var totalPagosPorSede = await _context.Pago
+                    .Include(p => p.TipoCuota)
+                    .Include(p => p.Socio)
+                    .Where(p => p.Socio.SedeId == gastos.SedeId)
+                    .SumAsync(p => p.TipoCuota.Importe * p.CantidadCuotas);
+
+                var totalGastosPorSede = await _context.Gastos
+                    .Where(g => g.SedeId == gastos.SedeId)
+                    .SumAsync(g => g.Importe);
+
+                var fondosDisponiblesPorSede = totalPagosPorSede - totalGastosPorSede;
+
+                if (fondosDisponiblesPorSede < gastos.Importe)
+                {
+                    ModelState.AddModelError(string.Empty, "Fondos insuficientes para realizar este gasto en la sede seleccionada.");
+                    ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
+                    return View(gastos);
+                }
+
                 _context.Add(gastos);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", gastos.SedeId);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el gasto.");
+            }
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
             return View(gastos);
         }
 
@@ -83,7 +121,7 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 return NotFound();
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", gastos.SedeId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
             return View(gastos);
         }
 
@@ -99,27 +137,54 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                try
+                var gastoExistente = await _context.Gastos.FindAsync(id);
+
+                if (gastoExistente == null)
                 {
-                    _context.Update(gastos);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+
+                var totalPagosPorSede = await _context.Pago
+                    .Include(p => p.TipoCuota)
+                    .Include(p => p.Socio)
+                    .Where(p => p.Socio.SedeId == gastos.SedeId)
+                    .SumAsync(p => p.TipoCuota.Importe * p.CantidadCuotas);
+
+                var totalGastosPorSede = await _context.Gastos
+                    .Where(g => g.SedeId == gastos.SedeId && g.IdGastos != gastos.IdGastos)
+                    .SumAsync(g => g.Importe);
+
+                var fondosDisponiblesPorSede = totalPagosPorSede - totalGastosPorSede;
+
+                if (fondosDisponiblesPorSede < gastos.Importe)
                 {
-                    if (!GastosExists(gastos.IdGastos))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError(string.Empty, "Fondos insuficientes para realizar este gasto en la sede seleccionada.");
+                    ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
+                    return View(gastos);
                 }
+
+                gastoExistente.Descripcion = gastos.Descripcion;
+                gastoExistente.Importe = gastos.Importe;
+                gastoExistente.FechaGasto = gastos.FechaGasto;
+                gastoExistente.SedeId = gastos.SedeId;
+
+                _context.Update(gastoExistente);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", gastos.SedeId);
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el gasto.");
+            }
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
             return View(gastos);
         }
 
