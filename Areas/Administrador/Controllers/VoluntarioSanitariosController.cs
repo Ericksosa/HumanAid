@@ -51,9 +51,15 @@ namespace HumanAid.Controllers
         // GET: VoluntarioSanitarios/Create
         public IActionResult Create()
         {
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion");
+            var voluntariosNoAdministrativosNiSanitarios = _context.Voluntario
+                .Where(v => v.VoluntarioAdministrativo == null && v.VoluntarioSanitario == null)
+                .Select(v => new { v.VoluntarioId, v.Nombre })
+                .ToList();
+
+            ViewData["VoluntarioId"] = new SelectList(voluntariosNoAdministrativosNiSanitarios, "VoluntarioId", "Nombre");
             return View();
         }
+
 
         // POST: VoluntarioSanitarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -68,15 +74,16 @@ namespace HumanAid.Controllers
                 _context.Add(voluntarioSanitario);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario Sanitario creado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioSanitario.VoluntarioId);
+            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Nombre", voluntarioSanitario.VoluntarioId);
             return View(voluntarioSanitario);
         }
 
@@ -95,7 +102,13 @@ namespace HumanAid.Controllers
             {
                 return NotFound();
             }
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioSanitario.VoluntarioId);
+
+            var voluntariosNoAdministrativosNiSanitarios = _context.Voluntario
+                .Where(v => v.VoluntarioAdministrativo == null && v.VoluntarioSanitario == null)
+                .Select(v => new { v.VoluntarioId, v.Nombre })
+                .ToList();
+
+            ViewData["VoluntarioId"] = new SelectList(voluntariosNoAdministrativosNiSanitarios, "VoluntarioId", "Nombre", voluntarioSanitario.VoluntarioId);
             return View(voluntarioSanitario);
         }
 
@@ -117,6 +130,7 @@ namespace HumanAid.Controllers
                 _context.Update(voluntarioSanitario);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario Sanitario editado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -124,7 +138,7 @@ namespace HumanAid.Controllers
                 await transaction.RollbackAsync();
                 if (!VoluntarioSanitarioExists(voluntarioSanitario.VoluntarioSanitarioId))
                 {
-                    return NotFound();
+                    TempData["danger"] = "Voluntario Sanitario no encontrado.";
                 }
                 else
                 {
@@ -134,10 +148,10 @@ namespace HumanAid.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioSanitario.VoluntarioId);
+            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Nombre", voluntarioSanitario.VoluntarioId);
             return View(voluntarioSanitario);
         }
 
@@ -169,15 +183,32 @@ namespace HumanAid.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var voluntarioSanitario = await _context.VoluntarioSanitario.FindAsync(id);
-            if (voluntarioSanitario != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.VoluntarioSanitario.Remove(voluntarioSanitario);
+                var voluntarioSanitario = await _context.VoluntarioSanitario.FindAsync(id);
+                if (voluntarioSanitario != null)
+                {
+                    _context.VoluntarioSanitario.Remove(voluntarioSanitario);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["success"] = "Voluntario Sanitario eliminado exitosamente.";
+                }
+                else
+                {
+                    TempData["danger"] = "Voluntario Sanitario no encontrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool VoluntarioSanitarioExists(int id)
         {

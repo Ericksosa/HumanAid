@@ -66,12 +66,13 @@ namespace HumanAid.Areas.Administrador.Controllers
                     _context.Add(sede);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    TempData["success"] = "Sede creada exitosamente.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    ModelState.AddModelError(string.Empty, $"Error al crear la sede: {ex.Message}");
+                    TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
                 }
             }
             return View(sede);
@@ -113,6 +114,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                     _context.Update(sede);
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    TempData["success"] = "Sede editada exitosamente.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -130,7 +132,8 @@ namespace HumanAid.Areas.Administrador.Controllers
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    ModelState.AddModelError(string.Empty, $"Error al editar la sede: {ex.Message}");
+                    TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
+
                 }
             }
             return View(sede);
@@ -157,15 +160,33 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sede = await _context.Sede.FindAsync(id);
-            if (sede != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Sede.Remove(sede);
+                var sede = await _context.Sede.FindAsync(id);
+                if (sede != null)
+                {
+                    _context.Sede.Remove(sede);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["success"] = "Sede eliminada exitosamente.";
+                }
+                else
+                {
+                    TempData["danger"] = "Sede no encontrada.";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
         private bool SedeExists(int id)
         {

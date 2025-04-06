@@ -52,10 +52,16 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Voluntarios/Create
         public IActionResult Create()
         {
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave");
+            var usuariosNoVoluntarios = _context.Usuario
+                .Where(u => !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId))
+                .Select(u => new { u.UsuarioId, u.Correo })
+                .ToList();
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre");
+            ViewData["UsuarioId"] = new SelectList(usuariosNoVoluntarios, "UsuarioId", "Correo");
             return View();
         }
+
 
         // POST: Voluntarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -70,18 +76,21 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Add(voluntario);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario creado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", voluntario.SedeId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", voluntario.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", voluntario.SedeId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Correo", voluntario.UsuarioId);
             return View(voluntario);
         }
+
+
 
 
 
@@ -96,10 +105,17 @@ namespace HumanAid.Areas.Administrador.Controllers
             var voluntario = await _context.Voluntario.FindAsync(id);
             if (voluntario == null)
             {
-                return NotFound();
+                TempData["danger"] = "Voluntario no encontrado.";
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", voluntario.SedeId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", voluntario.UsuarioId);
+
+            var usuariosNoVoluntarios = _context.Usuario
+                .Where(u => !_context.Voluntario.Any(v => v.UsuarioId == u.UsuarioId))
+                .Select(u => new { u.UsuarioId, u.Correo })
+                .ToList();
+
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", voluntario.SedeId);
+            ViewData["UsuarioId"] = new SelectList(usuariosNoVoluntarios, "UsuarioId", "Correo", voluntario.UsuarioId);
             return View(voluntario);
         }
 
@@ -121,6 +137,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Update(voluntario);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario editado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -128,7 +145,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await transaction.RollbackAsync();
                 if (!VoluntarioExists(voluntario.VoluntarioId))
                 {
-                    return NotFound();
+                    TempData["danger"] = "Voluntario no encontrado.";
                 }
                 else
                 {
@@ -138,11 +155,11 @@ namespace HumanAid.Areas.Administrador.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Ciudad", voluntario.SedeId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Clave", voluntario.UsuarioId);
+            ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", voluntario.SedeId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuario, "UsuarioId", "Correo", voluntario.UsuarioId);
             return View(voluntario);
         }
 
@@ -161,7 +178,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 .FirstOrDefaultAsync(m => m.VoluntarioId == id);
             if (voluntario == null)
             {
-                return NotFound();
+                TempData["danger"] = "Voluntario no encontrado.";
             }
 
             return View(voluntario);
@@ -172,15 +189,31 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var voluntario = await _context.Voluntario.FindAsync(id);
-            if (voluntario != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Voluntario.Remove(voluntario);
+                var voluntario = await _context.Voluntario.FindAsync(id);
+                if (voluntario != null)
+                {
+                    _context.Voluntario.Remove(voluntario);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["success"] = "Voluntario eliminado exitosamente.";
+                }
+                else
+                {
+                    TempData["danger"] = "Voluntario no encontrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool VoluntarioExists(int id)
         {

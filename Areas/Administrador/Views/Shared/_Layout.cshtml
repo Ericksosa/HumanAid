@@ -8,6 +8,22 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HumanAid.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    @if (TempData["success"] != null)
+    {
+        <meta name="sweet-alert-success" content="@TempData["success"]">
+    }
+    @if (TempData["danger"] != null)
+    {
+        <meta name="sweet-alert-error" content="@TempData["danger"]">
+    }
+    @if (TempData["warning"] != null)
+    {
+        <meta name="sweet-alert-warning" content="@TempData["warning"]">
+    }
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <meta name="sweet-alert-errors" content="@string.Join(", ", ViewData.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))">
+    }
 </head>
 <body>
     <header>
@@ -44,7 +60,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Administrador" asp-controller="Socios" asp-action="Index">Socios</a>
-                        </li> 
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="verMasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Ver más
@@ -75,13 +91,11 @@
             &copy; 2025 - HumanAid - <a asp-area="Administrador" asp-controller="Home" asp-action="Privacy">Admin</a>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/sweetalert.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-
-
-

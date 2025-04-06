@@ -53,7 +53,7 @@
                     @Html.DisplayFor(modelItem => item.FechaNacimiento)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Sede.Ciudad)
+                    @Html.DisplayFor(modelItem => item.Sede.Nombre)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FechaRegistro)
@@ -65,7 +65,7 @@
                     @Html.DisplayFor(modelItem => item.Telefono)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Usuario.Clave)
+                    @Html.DisplayFor(modelItem => item.Usuario.Correo)
                 </td>
                 <td>
                     <a asp-area="Administrador" asp-controller="Voluntarios" asp-action="Edit" asp-route-id="@item.VoluntarioId">Edit</a> |
@@ -76,5 +76,6 @@
         }
     </tbody>
 </table>
+<script src="~/js/sweetalert.js" asp-append-version="true"></script>
 
 
