@@ -21,10 +21,24 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Administrador/Usuarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchCorreo, int? RolId)
         {
-            var humanAidDbContext = _context.Usuario.Include(u => u.Rol);
-            return View(await humanAidDbContext.ToListAsync());
+            ViewBag.Roles = await _context.Rol.ToListAsync();
+
+            var usuariosQuery = _context.Usuario.Include(u => u.Rol).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchCorreo))
+            {
+                usuariosQuery = usuariosQuery.Where(u => u.Correo.Contains(searchCorreo));
+            }
+
+            if (RolId.HasValue)
+            {
+                usuariosQuery = usuariosQuery.Where(u => u.RolId == RolId.Value);
+            }
+
+            var usuarios = await usuariosQuery.ToListAsync();
+            return View(usuarios);
         }
 
         // GET: Administrador/Usuarios/Details/5
@@ -65,8 +79,8 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
+                await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -79,7 +93,6 @@ namespace HumanAid.Areas.Administrador.Controllers
             ViewData["RolId"] = new SelectList(_context.Rol, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
-
 
         // GET: Administrador/Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -120,7 +133,6 @@ namespace HumanAid.Areas.Administrador.Controllers
                     return NotFound();
                 }
 
-                // Actualizar propiedades del usuario existente
                 usuarioExistente.Correo = usuario.Correo;
                 usuarioExistente.Clave = usuario.Clave;
                 usuarioExistente.RolId = usuario.RolId;
@@ -128,8 +140,8 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 _context.Update(usuarioExistente);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
+                await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -142,7 +154,6 @@ namespace HumanAid.Areas.Administrador.Controllers
             ViewData["RolId"] = new SelectList(_context.Rol, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
-
 
         // GET: Administrador/Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -8,6 +8,8 @@ namespace HumanAid.Models
         public int RolId { get; set; }
         [Required]
         public string? Nombre { get; set; }
+        [Required]
+        public string? Descripcion { get; set; }
 
         public ICollection<Usuario>? Usuarios { get; set; }
 

@@ -55,7 +55,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RolId,Nombre,FechaRegistro")] Rol rol)
+        public async Task<IActionResult> Create([Bind("RolId,Nombre,Descripcion,FechaRegistro")] Rol rol)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -63,16 +63,19 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Add(rol);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error al crear el rol: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al crear el rol.");
-                return View(rol);
+                Console.WriteLine($"Error: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el rol.");
             }
+
+            return View(rol);
         }
+
 
         // GET: Administrador/Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -95,7 +98,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RolId,Nombre,FechaRegistro")] Rol rol)
+        public async Task<IActionResult> Edit(int id, [Bind("RolId,Nombre,Descripcion,FechaRegistro")] Rol rol)
         {
             if (id != rol.RolId)
             {
@@ -105,19 +108,34 @@ namespace HumanAid.Areas.Administrador.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                _context.Update(rol);
+                var rolExistente = await _context.Rol.FindAsync(id);
+
+                if (rolExistente == null)
+                {
+                    return NotFound();
+                }
+
+                // Actualizar propiedades del rol existente
+                rolExistente.Nombre = rol.Nombre;
+                rolExistente.Descripcion = rol.Descripcion;
+                rolExistente.FechaRegistro = rol.FechaRegistro;
+
+                _context.Update(rolExistente);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error al editar el rol: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al editar el rol.");
-                return View(rol);
+                Console.WriteLine($"Error: {ex.Message}");
+                ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el rol.");
             }
+
+            return View(rol);
         }
+
 
         // GET: Administrador/Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -142,25 +160,19 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-            try
+            var rol = await _context.Rol.FindAsync(id);
+            if (rol != null)
             {
-                var rol = await _context.Rol.FindAsync(id);
-                if (rol != null)
-                {
-                    _context.Rol.Remove(rol);
-                    await _context.SaveChangesAsync();
-                }
-                await transaction.CommitAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Rol.Remove(rol);
             }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                Console.WriteLine($"Error al eliminar el rol: {ex.Message}");
-                ModelState.AddModelError(string.Empty, "Ocurrió un error al eliminar el rol.");
-                return RedirectToAction(nameof(Index));
-            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool RolExists(int id)
+        {
+            return _context.Rol.Any(e => e.RolId == id);
         }
     }
 }
