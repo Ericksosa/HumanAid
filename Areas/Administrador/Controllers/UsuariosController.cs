@@ -65,8 +65,8 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
+                await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -79,7 +79,6 @@ namespace HumanAid.Areas.Administrador.Controllers
             ViewData["RolId"] = new SelectList(_context.Rol, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
-
 
         // GET: Administrador/Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -120,7 +119,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                     return NotFound();
                 }
 
-                // Actualizar propiedades del usuario existente
+                // Actualizar los datos del usuario existente
                 usuarioExistente.Correo = usuario.Correo;
                 usuarioExistente.Clave = usuario.Clave;
                 usuarioExistente.RolId = usuario.RolId;
@@ -128,8 +127,8 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 _context.Update(usuarioExistente);
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
+                await transaction.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -142,7 +141,6 @@ namespace HumanAid.Areas.Administrador.Controllers
             ViewData["RolId"] = new SelectList(_context.Rol, "RolId", "Nombre", usuario.RolId);
             return View(usuario);
         }
-
 
         // GET: Administrador/Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
