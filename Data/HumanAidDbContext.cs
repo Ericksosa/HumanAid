@@ -27,7 +27,6 @@ namespace HumanAid.Data
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Pago> Pago { get; set; }
         public DbSet<Gastos> Gastos { get; set; }
-
         public object Seguimiento { get; internal set; }
         public IEnumerable<object> Donacion { get; internal set; }
 
