@@ -62,12 +62,13 @@ namespace HumanAid.Controllers
                 _context.Add(medicamento);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Donación de medicamentos creada exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
             ViewData["EnvioId"] = new SelectList(_context.Envio, "EnvioId", "Destino", medicamento.EnvioId);
@@ -107,6 +108,7 @@ namespace HumanAid.Controllers
                 _context.Update(medicamento);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Donación de medicamentos editada exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -124,7 +126,7 @@ namespace HumanAid.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
             ViewData["EnvioId"] = new SelectList(_context.Envio, "EnvioId", "Destino", medicamento.EnvioId);
@@ -155,16 +157,30 @@ namespace HumanAid.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var medicamento = await _context.Medicamento.FindAsync(id);
-            if (medicamento != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Medicamento.Remove(medicamento);
+                var medicamento = await _context.Medicamento.FindAsync(id);
+                if (medicamento != null)
+                {
+                    _context.Medicamento.Remove(medicamento);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["success"] = "Donación de medicamentos eliminada exitosamente.";
+                }
+                else
+                {
+                    TempData["danger"] = "Donación de medicamentos no encontrada.";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
         private bool MedicamentoExists(int id)
         {
             return _context.Medicamento.Any(e => e.MedicamentoId == id);
