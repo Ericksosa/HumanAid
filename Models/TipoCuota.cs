@@ -16,5 +16,6 @@ namespace HumanAid.Models
 
         //Metodos de relación
         public ICollection<Socio>? Socios { get; set; }
+        public ICollection<Pago>? Pagos { get; set; }
     }
 }

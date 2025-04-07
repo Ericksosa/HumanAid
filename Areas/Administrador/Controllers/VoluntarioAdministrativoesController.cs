@@ -51,9 +51,16 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: VoluntarioAdministrativoes/Create
         public IActionResult Create()
         {
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion");
+            var voluntariosNoAdministrativosNiSanitarios = _context.Voluntario
+                .Where(v => v.VoluntarioAdministrativo == null && v.VoluntarioSanitario == null)
+                .Select(v => new { v.VoluntarioId, v.Nombre })
+                .ToList();
+
+            ViewData["VoluntarioId"] = new SelectList(voluntariosNoAdministrativosNiSanitarios, "VoluntarioId", "Nombre");
             return View();
         }
+
+
 
         // POST: VoluntarioAdministrativoes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -68,15 +75,16 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Add(voluntarioAdministrativo);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario Administrativo creado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioAdministrativo.VoluntarioId);
+            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Nombre", voluntarioAdministrativo.VoluntarioId);
             return View(voluntarioAdministrativo);
         }
 
@@ -93,7 +101,13 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 return NotFound();
             }
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioAdministrativo.VoluntarioId);
+
+            var voluntariosNoAdministrativosNiSanitarios = _context.Voluntario
+                .Where(v => v.VoluntarioAdministrativo == null && v.VoluntarioSanitario == null)
+                .Select(v => new { v.VoluntarioId, v.Nombre })
+                .ToList();
+
+            ViewData["VoluntarioId"] = new SelectList(voluntariosNoAdministrativosNiSanitarios, "VoluntarioId", "Nombre", voluntarioAdministrativo.VoluntarioId);
             return View(voluntarioAdministrativo);
         }
 
@@ -115,6 +129,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Update(voluntarioAdministrativo);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+                TempData["success"] = "Voluntario Administrativo editado exitosamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -132,10 +147,10 @@ namespace HumanAid.Areas.Administrador.Controllers
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                ModelState.AddModelError(string.Empty, $"An error occurred: {ex.Message} - {ex.InnerException?.Message}");
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Direccion", voluntarioAdministrativo.VoluntarioId);
+            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Nombre", voluntarioAdministrativo.VoluntarioId);
             return View(voluntarioAdministrativo);
         }
 
@@ -163,15 +178,32 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var voluntarioAdministrativo = await _context.VoluntarioAdministrativo.FindAsync(id);
-            if (voluntarioAdministrativo != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.VoluntarioAdministrativo.Remove(voluntarioAdministrativo);
+                var voluntarioAdministrativo = await _context.VoluntarioAdministrativo.FindAsync(id);
+                if (voluntarioAdministrativo != null)
+                {
+                    _context.VoluntarioAdministrativo.Remove(voluntarioAdministrativo);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                    TempData["success"] = "Voluntario Administrativo eliminado exitosamente.";
+                }
+                else
+                {
+                    TempData["danger"] = "Voluntario Administrativo no encontrado.";
+                }
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool VoluntarioAdministrativoExists(int id)
         {
