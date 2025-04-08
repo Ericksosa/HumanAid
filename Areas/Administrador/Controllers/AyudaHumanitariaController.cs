@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
+using NuGet.Protocol.Plugins;
 
 namespace HumanAid.Areas.Administrador.Controllers
 {
@@ -38,7 +39,54 @@ namespace HumanAid.Areas.Administrador.Controllers
             ViewBag.Fechas = fechas;
             ViewBag.Destinos = destinos;
 
+
+            if (!string.IsNullOrEmpty(tipoDonacion) ||
+                   !string.IsNullOrEmpty(destino) ||
+                   !string.IsNullOrEmpty(fechaInicio) ||
+                   !string.IsNullOrEmpty(fechaFin))
+            {
+                await GetFilteredEnvios(tipoDonacion, destino, fechaInicio, fechaFin);
+            }
+
             return View();
+        }
+
+        private async Task<List<Envio>> GetFilteredEnvios(string tipoDonacion, string destino, string fechaInicio, string fechaFin)
+        {
+            var envios = _context.Envio.AsQueryable();
+
+            try
+            {
+                if (!string.IsNullOrEmpty(tipoDonacion))
+                    envios = envios.Where(e => e.TipoEnvio == tipoDonacion);
+
+                if (!string.IsNullOrEmpty(destino))
+                    envios = envios.Where(e => e.Destino == destino);
+
+                if (!string.IsNullOrEmpty(fechaInicio) && DateTime.TryParse(fechaInicio, out DateTime fechaInicioParsed))
+                    envios = envios.Where(e => e.Fecha >= fechaInicioParsed);
+
+                if (!string.IsNullOrEmpty(fechaFin) && DateTime.TryParse(fechaFin, out DateTime fechaFinParsed))
+                    envios = envios.Where(e => e.Fecha <= fechaFinParsed);
+
+                var lista = await envios.ToListAsync();
+
+                if (lista == null || !lista.Any())
+                {
+                    TempData["danger"] = "No se encontraron datos en ese periodo.";
+                }
+                else
+                {
+                    TempData["success"] = "Datos filtrados correctamente.";
+                }
+
+                return lista;
+            }
+            catch (Exception)
+            {
+                TempData["danger"] = "Ocurrió un error al filtrar los datos.";
+                return new List<Envio>();
+            }
         }
 
         public async Task<IActionResult> ExportToPdf(string tipoDonacion, string destino, string fechaInicio, string fechaFin)
@@ -47,7 +95,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
             if (envios == null || !envios.Any())
             {
-                TempData["ErrorMessage"] = "No se encontraron datos en ese periodo para generar el PDF.";
+                TempData["danger"] = "No se encontraron datos en ese periodo para generar el PDF.";
                 return RedirectToAction("Index", new { tipoDonacion, destino, fechaInicio, fechaFin });
             }
 
@@ -102,7 +150,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
             if (envios == null || !envios.Any())
             {
-                TempData["ErrorMessage"] = "No se encontraron datos en ese periodo para generar el Excel.";
+                TempData["danger"] = "No se encontraron datos en ese periodo para generar el Excel.";
                 return RedirectToAction("Index", new { tipoDonacion, destino, fechaInicio, fechaFin });
             }
 
@@ -139,44 +187,6 @@ namespace HumanAid.Areas.Administrador.Controllers
                     workbook.SaveAs(stream);
                     return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Envios.xlsx");
                 }
-            }
-        }
-
-        private async Task<List<Envio>> GetFilteredEnvios(string tipoDonacion, string destino, string fechaInicio, string fechaFin)
-        {
-            var envios = _context.Envio.AsQueryable();
-
-            try
-            {
-                if (!string.IsNullOrEmpty(tipoDonacion))
-                    envios = envios.Where(e => e.TipoEnvio == tipoDonacion);
-
-                if (!string.IsNullOrEmpty(destino))
-                    envios = envios.Where(e => e.Destino == destino);
-
-                if (!string.IsNullOrEmpty(fechaInicio) && DateTime.TryParse(fechaInicio, out DateTime fechaInicioParsed))
-                    envios = envios.Where(e => e.Fecha >= fechaInicioParsed);
-
-                if (!string.IsNullOrEmpty(fechaFin) && DateTime.TryParse(fechaFin, out DateTime fechaFinParsed))
-                    envios = envios.Where(e => e.Fecha <= fechaFinParsed);
-
-                var lista = await envios.ToListAsync();
-
-                if (lista == null || !lista.Any())
-                {
-                    TempData["ErrorMessage"] = "No se encontraron datos en ese periodo.";
-                }
-                else
-                {
-                    TempData["SuccessMessage"] = "Datos filtrados correctamente.";
-                }
-
-                return lista;
-            }
-            catch (Exception)
-            {
-                TempData["ErrorMessage"] = "Ocurrió un error al filtrar los datos.";
-                return new List<Envio>();
             }
         }
 
