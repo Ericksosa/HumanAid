@@ -4,42 +4,124 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Medicamento</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EnvioId" class="control-label"></label>
-                <select asp-for="EnvioId" class ="form-control" asp-items="ViewBag.EnvioId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Dosis" class="control-label"></label>
-                <input asp-for="Dosis" class="form-control" />
-                <span asp-validation-for="Dosis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="cantidad" class="control-label"></label>
-                <input asp-for="cantidad" class="form-control" />
-                <span asp-validation-for="cantidad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Nueva Donación de Medicamentos</h1>
+            <p class="text-muted">Complete el formulario para registrar una nueva donación de medicamentos</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-capsule me-2"></i>Información del Medicamento
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="EnvioId" class="form-label fw-medium">
+                                <i class="bi bi-truck me-2"></i>Destino del Envío
+                            </label>
+                            <select asp-for="EnvioId" class="form-select form-select-lg" asp-items="ViewBag.EnvioId">
+                                <option value="" selected disabled>-- Seleccione un destino --</option>
+                            </select>
+                            <div class="form-text">Seleccione el destino al que se enviará esta donación</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-medium">
+                                <i class="bi bi-prescription2 me-2"></i>Nombre del Medicamento
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ej: Paracetamol, Ibuprofeno..." />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                            <div class="form-text">Indique el nombre comercial o genérico del medicamento</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Dosis" class="form-label fw-medium">
+                                <i class="bi bi-droplet-half me-2"></i>Dosis
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="Dosis" class="form-control" placeholder="Ej: 500mg, 1g..." />
+                                <span class="input-group-text">mg/ml</span>
+                            </div>
+                            <span asp-validation-for="Dosis" class="text-danger"></span>
+                            <div class="form-text">Especifique la dosis del medicamento (mg, ml, etc.)</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="cantidad" class="form-label fw-medium">
+                                <i class="bi bi-box-seam me-2"></i>Cantidad
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="cantidad" class="form-control" placeholder="0" type="number" min="1" step="1" />
+                                <span class="input-group-text">unidades</span>
+                            </div>
+                            <span asp-validation-for="cantidad" class="text-danger"></span>
+                            <div class="form-text">Indique el número de unidades que está donando</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Donación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Información Importante
+                    </h5>
+                    <p class="card-text">Todos los medicamentos donados deben cumplir con los siguientes requisitos:</p>
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Estar dentro de su fecha de caducidad</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Mantener su envase original intacto</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Incluir prospecto y fecha de caducidad visible</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>No haber sido expuestos a temperaturas extremas</span>
+                        </li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <div class="d-flex">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>
+                                <strong>Importante:</strong> No se aceptan medicamentos que requieran receta médica sin la documentación correspondiente.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
