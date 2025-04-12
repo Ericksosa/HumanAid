@@ -64,18 +64,18 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["success"] = "El rol fue creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar el rol: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el rol.");
             }
 
             return View(rol);
         }
-
 
         // GET: Administrador/Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -102,6 +102,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         {
             if (id != rol.RolId)
             {
+                TempData["danger"] = "El ID del rol no coincide.";
                 return NotFound();
             }
 
@@ -112,6 +113,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (rolExistente == null)
                 {
+                    TempData["danger"] = "El rol no fue encontrado.";
                     return NotFound();
                 }
 
@@ -124,18 +126,18 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["success"] = "El rol fue actualizado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al actualizar el rol: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el rol.");
             }
 
             return View(rol);
         }
-
 
         // GET: Administrador/Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -160,14 +162,29 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var rol = await _context.Rol.FindAsync(id);
-            if (rol != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Rol.Remove(rol);
-            }
+                var rol = await _context.Rol.FindAsync(id);
+                if (rol == null)
+                {
+                    TempData["danger"] = "El rol no fue encontrado.";
+                    return NotFound();
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Rol.Remove(rol);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["success"] = "El rol fue eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al eliminar el rol: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool RolExists(int id)

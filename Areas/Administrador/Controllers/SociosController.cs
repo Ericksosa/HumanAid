@@ -51,29 +51,23 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Socio/Socios/Create
         public IActionResult Create()
         {
-            // Filtrar usuarios que tienen el rol de "Socio" y que no están registrados como socios
             var usuariosSociosDisponibles = _context.Usuario
                 .Include(u => u.Rol)
                 .Where(u => u.Rol.Nombre == "Socio" && !_context.Socio.Any(s => s.UsuarioId == u.UsuarioId))
                 .ToList();
 
-            // Verificar si no hay usuarios disponibles
             if (!usuariosSociosDisponibles.Any())
             {
-                // Mostrar un mensaje de alerta y permanecer en la vista Index
                 TempData["Alerta"] = "No hay usuarios disponibles para asignar como socios. Por favor, crea usuarios primero.";
                 return RedirectToAction(nameof(Index));
             }
 
-            // Configurar los desplegables para la vista si hay usuarios disponibles
             ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre");
             ViewData["TipoCuotaId"] = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre");
             ViewData["UsuarioId"] = new SelectList(usuariosSociosDisponibles, "UsuarioId", "Correo");
 
             return View();
         }
-
-
 
         // POST: Socio/Socios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -92,12 +86,14 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Add(socio);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                TempData["success"] = "El socio fue creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error al guardar el socio: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar el socio: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el socio.");
                 return View(socio);
             }
@@ -131,6 +127,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         {
             if (id != socio.SocioId)
             {
+                TempData["danger"] = "El ID del socio no coincide.";
                 return NotFound();
             }
 
@@ -144,12 +141,14 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Update(socio);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                TempData["success"] = "El socio fue actualizado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error al actualizar el socio: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al actualizar el socio: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el socio.");
                 return View(socio);
             }
@@ -181,14 +180,29 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var socio = await _context.Socio.FindAsync(id);
-            if (socio != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Socio.Remove(socio);
-            }
+                var socio = await _context.Socio.FindAsync(id);
+                if (socio == null)
+                {
+                    TempData["danger"] = "El socio no fue encontrado.";
+                    return NotFound();
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Socio.Remove(socio);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["success"] = "El socio fue eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al eliminar el socio: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool SocioExists(int id)

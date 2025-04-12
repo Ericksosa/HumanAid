@@ -79,14 +79,14 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
+                TempData["success"] = "El usuario fue creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar el usuario: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el usuario.");
             }
 
@@ -120,6 +120,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         {
             if (id != usuario.UsuarioId)
             {
+                TempData["danger"] = "El ID del usuario no coincide.";
                 return NotFound();
             }
 
@@ -130,6 +131,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (usuarioExistente == null)
                 {
+                    TempData["danger"] = "El usuario no fue encontrado.";
                     return NotFound();
                 }
 
@@ -140,14 +142,14 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 _context.Update(usuarioExistente);
                 await _context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
+                TempData["success"] = "El usuario fue actualizado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al actualizar el usuario: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el usuario.");
             }
 
@@ -179,14 +181,29 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var usuario = await _context.Usuario.FindAsync(id);
-            if (usuario != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Usuario.Remove(usuario);
-            }
+                var usuario = await _context.Usuario.FindAsync(id);
+                if (usuario == null)
+                {
+                    TempData["danger"] = "El usuario no fue encontrado.";
+                    return NotFound();
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Usuario.Remove(usuario);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["success"] = "El usuario fue eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al eliminar el usuario: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool UsuarioExists(int id)

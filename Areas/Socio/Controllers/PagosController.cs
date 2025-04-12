@@ -85,7 +85,7 @@ namespace HumanAid.Areas.Socio.Controllers
                 var socio = _context.Socio.Include(s => s.TipoCuota).FirstOrDefault(s => s.SocioId == pago.SocioId);
                 if (socio == null)
                 {
-                    ModelState.AddModelError("", "El socio seleccionado no existe.");
+                    TempData["danger"] = "El socio seleccionado no existe.";
                     throw new Exception("El socio seleccionado no existe en la base de datos.");
                 }
 
@@ -94,12 +94,14 @@ namespace HumanAid.Areas.Socio.Controllers
                 _context.Add(pago);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                TempData["success"] = "El pago se creó correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error al guardar el pago: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar el pago: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el pago.");
 
                 var socios = _context.Socio.Include(s => s.TipoCuota).ToList();
@@ -147,6 +149,7 @@ namespace HumanAid.Areas.Socio.Controllers
         {
             if (id != pago.Id)
             {
+                TempData["danger"] = "ID del pago no coincide.";
                 return NotFound();
             }
 
@@ -159,6 +162,7 @@ namespace HumanAid.Areas.Socio.Controllers
 
                 if (pagoExistente == null)
                 {
+                    TempData["danger"] = "El pago no fue encontrado.";
                     return NotFound();
                 }
 
@@ -172,18 +176,19 @@ namespace HumanAid.Areas.Socio.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["success"] = "El pago se actualizó correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar los cambios: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar los cambios.");
             }
 
             ViewBag.SocioId = new SelectList(_context.Socio, "SocioId", "Nombre", pago.SocioId);
             ViewBag.TipoCuotaId = new SelectList(_context.TipoCuota, "TipoCuotaId", "Nombre", pago.TipoCuotaId);
-
             return View(pago);
         }
 
@@ -212,14 +217,29 @@ namespace HumanAid.Areas.Socio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pago = await _context.Pago.FindAsync(id);
-            if (pago != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Pago.Remove(pago);
-            }
+                var pago = await _context.Pago.FindAsync(id);
+                if (pago == null)
+                {
+                    TempData["danger"] = "El pago no existe.";
+                    return NotFound();
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Pago.Remove(pago);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["success"] = "El pago fue eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al eliminar el pago: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpGet]
@@ -247,3 +267,4 @@ namespace HumanAid.Areas.Socio.Controllers
         }
     }
 }
+

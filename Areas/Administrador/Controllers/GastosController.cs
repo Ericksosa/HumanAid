@@ -86,7 +86,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (fondosDisponiblesPorSede < gastos.Importe)
                 {
-                    ModelState.AddModelError(string.Empty, "Fondos insuficientes para realizar este gasto en la sede seleccionada.");
+                    TempData["danger"] = "Fondos insuficientes para realizar este gasto en la sede seleccionada.";
                     ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
                     return View(gastos);
                 }
@@ -95,12 +95,13 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["success"] = "El gasto se creó correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al guardar el gasto: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al guardar el gasto.");
             }
 
@@ -134,6 +135,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         {
             if (id != gastos.IdGastos)
             {
+                TempData["danger"] = "El ID del gasto no coincide.";
                 return NotFound();
             }
 
@@ -144,6 +146,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (gastoExistente == null)
                 {
+                    TempData["danger"] = "El gasto no fue encontrado.";
                     return NotFound();
                 }
 
@@ -161,7 +164,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (fondosDisponiblesPorSede < gastos.Importe)
                 {
-                    ModelState.AddModelError(string.Empty, "Fondos insuficientes para realizar este gasto en la sede seleccionada.");
+                    TempData["danger"] = "Fondos insuficientes para realizar este gasto en la sede seleccionada.";
                     ViewData["SedeId"] = new SelectList(_context.Sede, "SedeId", "Nombre", gastos.SedeId);
                     return View(gastos);
                 }
@@ -175,12 +178,13 @@ namespace HumanAid.Areas.Administrador.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
+                TempData["success"] = "El gasto se actualizó correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                Console.WriteLine($"Error: {ex.Message}");
+                TempData["danger"] = $"Ocurrió un error al actualizar el gasto: {ex.Message}";
                 ModelState.AddModelError(string.Empty, "Ocurrió un error al actualizar el gasto.");
             }
 
@@ -212,14 +216,29 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var gastos = await _context.Gastos.FindAsync(id);
-            if (gastos != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                _context.Gastos.Remove(gastos);
-            }
+                var gastos = await _context.Gastos.FindAsync(id);
+                if (gastos == null)
+                {
+                    TempData["danger"] = "El gasto no fue encontrado.";
+                    return NotFound();
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                _context.Gastos.Remove(gastos);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                TempData["success"] = "El gasto fue eliminado correctamente.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al eliminar el gasto: {ex.Message}";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         private bool GastosExists(int id)
