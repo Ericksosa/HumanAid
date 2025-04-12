@@ -5,76 +5,95 @@
     ViewData["Title"] = "Seguimiento de Donaciones";
 }
 
-<h2>Seguimiento de Donaciones</h2>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<form asp-action="Index" method="get">
-    <label>Tipo de Donación:</label>
-    <select name="tipoDonacion">
-        <option value="">Todos</option>
-        @if (ViewBag.Envios != null)
-        {
-            @foreach (var envio in ViewBag.Envios)
-            {
-                <option value="@envio.TipoEnvio" selected="@(ViewBag.CurrentTipoDonacion == envio.TipoEnvio ? "selected" : null)">
-                    @envio.TipoEnvio
-                </option>
-            }
-        }
-    </select>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📦 Seguimiento de Donaciones</h2>
 
-    <label>Código:</label>
-    <select name="destino">
-        <option value="">Todos</option>
-        @if (ViewBag.Envios != null)
-        {
-            @foreach (var envio in ViewBag.Envios)
-            {
-                <option value="@envio.CodigoEnvio" selected="@(ViewBag.CurrentDestino == envio.CodigoEnvio ? "selected" : null)">
-                    @envio.CodigoEnvio
-                </option>
-            }
-        }
-    </select>
+    <form asp-action="Index" method="get" class="row g-3 mb-4">
+        <div class="col-md-5">
+            <label class="form-label">Tipo de Donación:</label>
+            <select name="tipoDonacion" class="form-select">
+                <option value="">Todos</option>
+                @if (ViewBag.Envios != null)
+                {
+                    foreach (var envio in ViewBag.Envios)
+                    {
+                        <option value="@envio.TipoEnvio" selected="@(ViewBag.CurrentTipoDonacion == envio.TipoEnvio ? "selected" : null)">
+                            @envio.TipoEnvio
+                        </option>
+                    }
+                }
+            </select>
+        </div>
 
-    <button type="submit">Filtrar</button>
-</form>
+        <div class="col-md-5">
+            <label class="form-label">Código:</label>
+            <select name="destino" class="form-select">
+                <option value="">Todos</option>
+                @if (ViewBag.Envios != null)
+                {
+                    foreach (var envio in ViewBag.Envios)
+                    {
+                        <option value="@envio.CodigoEnvio" selected="@(ViewBag.CurrentDestino == envio.CodigoEnvio ? "selected" : null)">
+                            @envio.CodigoEnvio
+                        </option>
+                    }
+                }
+            </select>
+        </div>
 
+        <div class="col-md-2 d-grid">
+            <label class="form-label invisible">Filtrar</label>
+            <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+        </div>
+    </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tipo</th>
-            <th>Destino</th>
-            <th>Estado</th>
-            <th>Codigo</th>
-            <th>Fecha</th>
-            <th>Fecha Salida</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null)
-        {
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped table-hover text-center align-middle">
+            <thead class="table-secondary">
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.TipoEnvio)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Destino)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Estado)</td>
-                    <td>@Html.DisplayFor(modelItem => item.CodigoEnvio)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
-                    <td>@Html.DisplayFor(modelItem => item.FechaSalida)</td>
+                    <th>Tipo</th>
+                    <th>Destino</th>
+                    <th>Estado</th>
+                    <th>Código</th>
+                    <th>Fecha</th>
+                    <th>Fecha Salida</th>
                 </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="6">No hay envíos disponibles.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.TipoEnvio)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Destino)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CodigoEnvio)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FechaSalida)</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-muted">No hay envíos disponibles.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-<div>
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page,envioId = ViewBag.CurrentSedeFilter }))
+    <div class="d-flex justify-content-center mt-4">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, envioId = ViewBag.CurrentSedeFilter }),
+                 new PagedListRenderOptions
+        {
+            UlElementClasses = new[] { "pagination" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            ActiveLiElementClass = "active"
+        })
+    </div>
 </div>

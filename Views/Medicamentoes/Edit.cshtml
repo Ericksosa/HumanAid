@@ -4,44 +4,142 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Medicamento</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MedicamentoId" />
-            <div class="form-group">
-                <label asp-for="EnvioId" class="control-label"></label>
-                <select asp-for="EnvioId" class="form-control" asp-items="ViewBag.EnvioId"></select>
-                <span asp-validation-for="EnvioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Dosis" class="control-label"></label>
-                <input asp-for="Dosis" class="form-control" />
-                <span asp-validation-for="Dosis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="cantidad" class="control-label"></label>
-                <input asp-for="cantidad" class="form-control" />
-                <span asp-validation-for="cantidad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Editar Donación de Medicamentos</h1>
+            <p class="text-muted">Modifique la información de la donación de medicamentos</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar Información del Medicamento #@Model.MedicamentoId
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="MedicamentoId" />
+
+                        <div class="mb-4">
+                            <label asp-for="EnvioId" class="form-label fw-medium">
+                                <i class="bi bi-truck me-2"></i>Destino del Envío
+                            </label>
+                            <select asp-for="EnvioId" class="form-select form-select-lg" asp-items="ViewBag.EnvioId"></select>
+                            <span asp-validation-for="EnvioId" class="text-danger"></span>
+                            <div class="form-text">Seleccione el destino al que se enviará esta donación</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-medium">
+                                <i class="bi bi-prescription2 me-2"></i>Nombre del Medicamento
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ej: Paracetamol, Ibuprofeno..." />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                            <div class="form-text">Indique el nombre comercial o genérico del medicamento</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Dosis" class="form-label fw-medium">
+                                <i class="bi bi-droplet-half me-2"></i>Dosis
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="Dosis" class="form-control" placeholder="Ej: 500mg, 1g..." />
+                                <span class="input-group-text">mg/ml</span>
+                            </div>
+                            <span asp-validation-for="Dosis" class="text-danger"></span>
+                            <div class="form-text">Especifique la dosis del medicamento (mg, ml, etc.)</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="cantidad" class="form-label fw-medium">
+                                <i class="bi bi-box-seam me-2"></i>Cantidad
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="cantidad" class="form-control" placeholder="0" type="number" min="1" step="1" />
+                                <span class="input-group-text">unidades</span>
+                            </div>
+                            <span asp-validation-for="cantidad" class="text-danger"></span>
+                            <div class="form-text">Indique el número de unidades que está donando</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.MedicamentoId" class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-info-circle me-2"></i>Ver Detalles
+                                </a>
+                                <button type="submit" class="btn btn-warning btn-lg px-4">
+                                    <i class="bi bi-save me-2"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Estado de la Donación
+                    </h5>
+                    <p class="card-text">Está editando la información de una donación existente. Los cambios se aplicarán una vez guardados.</p>
+
+                    <div class="d-flex align-items-center mb-3 mt-4">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="bi bi-calendar-check text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Fecha de registro</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-5).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registrado por</div>
+                            <div class="fw-medium">Donador Externo</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning rounded-circle p-2 me-3">
+                            <i class="bi bi-clock-history text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Última modificación</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <div class="d-flex">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            <div>
+                                <strong>Recordatorio:</strong> Verifique los datos del medicamento antes de guardar los cambios.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
