@@ -19,11 +19,31 @@ namespace HumanAid.Controllers
         }
 
         // GET: Medicamentoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int page = 1)
         {
-            var humanAidDbContext = _context.Medicamento.Include(m => m.Envio);
-            return View(await humanAidDbContext.ToListAsync());
+            int pageSize = 7;
+
+            var medicamentos = from m in _context.Medicamento.Include(m => m.Envio)
+                               select m;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                medicamentos = medicamentos.Where(s => s.Nombre.Contains(searchString));
+            }
+
+            int totalItems = await medicamentos.CountAsync();
+            var items = await medicamentos
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewData["SearchString"] = searchString;
+
+            return View(items);
         }
+
 
         // GET: Medicamentoes/Details/5
         public async Task<IActionResult> Details(int? id)

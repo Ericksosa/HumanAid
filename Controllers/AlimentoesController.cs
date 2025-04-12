@@ -19,11 +19,31 @@ namespace HumanAid.Controllers
         }
 
         // GET: Alimentoes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int page = 1)
         {
-            var humanAidDbContext = _context.Alimento.Include(a => a.Envio);
-            return View(await humanAidDbContext.ToListAsync());
+            int pageSize = 7;
+
+            var alimentos = from a in _context.Alimento.Include(a => a.Envio)
+                            select a;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                alimentos = alimentos.Where(s => s.Tipo.Contains(searchString));
+            }
+
+            int totalItems = await alimentos.CountAsync();
+            var items = await alimentos
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewData["SearchString"] = searchString;
+
+            return View(items);
         }
+
 
         // GET: Alimentoes/Details/5
         public async Task<IActionResult> Details(int? id)

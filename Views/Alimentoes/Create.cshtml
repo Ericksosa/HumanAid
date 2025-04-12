@@ -4,37 +4,101 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Alimento</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="EnvioId" class="control-label"></label>
-                <select asp-for="EnvioId" class ="form-control" asp-items="ViewBag.EnvioId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tipo" class="control-label"></label>
-                <input asp-for="Tipo" class="form-control" />
-                <span asp-validation-for="Tipo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Peso" class="control-label"></label>
-                <input asp-for="Peso" class="form-control" />
-                <span asp-validation-for="Peso" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Nueva Donación de Alimentos</h1>
+            <p class="text-muted">Complete el formulario para registrar una nueva donación de alimentos</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-box-seam me-2"></i>Información del Alimento
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="EnvioId" class="form-label fw-medium">
+                                <i class="bi bi-truck me-2"></i>Destino del Envío
+                            </label>
+                            <select asp-for="EnvioId" class="form-select form-select-lg" asp-items="ViewBag.EnvioId">
+                                <option value="" selected disabled>-- Seleccione un destino --</option>
+                            </select>
+                            <div class="form-text">Seleccione el destino al que se enviará esta donación</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Tipo" class="form-label fw-medium">
+                                <i class="bi bi-tag me-2"></i>Tipo de Alimento
+                            </label>
+                            <input asp-for="Tipo" class="form-control form-control-lg" placeholder="Ej: Arroz, Frijoles, Pasta..." />
+                            <span asp-validation-for="Tipo" class="text-danger"></span>
+                            <div class="form-text">Especifique el tipo de alimento que está donando</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Peso" class="form-label fw-medium">
+                                <i class="bi bi-speedometer2 me-2"></i>Peso (kg)
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <input asp-for="Peso" class="form-control" placeholder="0.00" type="number" step="0.01" min="0" />
+                                <span class="input-group-text">kg</span>
+                            </div>
+                            <span asp-validation-for="Peso" class="text-danger"></span>
+                            <div class="form-text">Indique el peso en kilogramos</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Donación
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Información Importante
+                    </h5>
+                    <p class="card-text">Todos los alimentos donados deben estar en buen estado y dentro de su fecha de caducidad.</p>
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Alimentos no perecederos son preferibles
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Empaquetados y sellados correctamente
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Con etiquetas de información nutricional
+                        </li>
+                    </ul>
+                    <p class="card-text">Para más información sobre donaciones, contacte con nuestro equipo.</p>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-question-circle me-2"></i>Ayuda con Donaciones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
