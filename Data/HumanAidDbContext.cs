@@ -27,6 +27,7 @@ namespace HumanAid.Data
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Pago> Pago { get; set; }
         public DbSet<Gastos> Gastos { get; set; }
+        public DbSet<Labores> Labores { get; set; }
         public object Seguimiento { get; internal set; }
         public IEnumerable<object> Donacion { get; internal set; }
 
@@ -122,6 +123,11 @@ namespace HumanAid.Data
                 .WithMany(s => s.Gastos)
                 .HasForeignKey(g => g.SedeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Voluntario>()
+                .HasMany(v => v.Labores)
+                .WithOne(l => l.Voluntario)
+                .HasForeignKey(l => l.VoluntarioId);
 
             // Relaciones de muchos a muchos
             modelBuilder.Entity<EnvioSede>()

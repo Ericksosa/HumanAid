@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HumanAid.styles.css" asp-append-version="true" />
+    @if (TempData["success"] != null)
+    {
+        <meta name="sweet-alert-success" content="@TempData["success"]">
+    }
+    @if (TempData["danger"] != null)
+    {
+        <meta name="sweet-alert-error" content="@TempData["danger"]">
+    }
+    @if (TempData["warning"] != null)
+    {
+        <meta name="sweet-alert-warning" content="@TempData["warning"]">
+    }
+    @if (ViewData.ModelState.ErrorCount > 0)
+    {
+        <meta name="sweet-alert-errors" content="@string.Join(", ", ViewData.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))">
+    }
 </head>
 <body>
     <header>
@@ -24,6 +40,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="VoluntariosAdministrativos" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="VoluntariosAdministrativos" asp-controller="Labores" asp-action="Index">Labores Administrativas</a>
                         </li>
                         <li class="nav-item">
                             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
@@ -49,6 +68,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/sweetalert.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

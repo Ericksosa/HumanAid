@@ -2,5 +2,252 @@
     ViewData["Title"] = "Home - Donadores Externos";
 }
 
-<h2>Home - Donadores Externos</h2>
-<p>Bienvenido al área de donadores externos.</p>
+<div class="bg-success bg-gradient text-white p-5 rounded-3 mb-4">
+    <div class="container-fluid py-3">
+        <h1 class="display-4 fw-bold">Tu ayuda transforma vidas</h1>
+        <p class="col-md-8 fs-4">Gracias a donadores como tú, HumanAid puede llevar esperanza y asistencia a quienes más lo necesitan.</p>
+        <a class="btn btn-light btn-lg mt-2" asp-area="" asp-controller="Alimentoes" asp-action="Index">Donar ahora</a>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Impact Section -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-3">El impacto de tu donación</h2>
+            <p class="lead">En HumanAid trabajamos para mejorar la calidad de vida de comunidades vulnerables a través de programas de salud, alimentación y educación.</p>
+            <div class="row g-4 mt-3">
+                <div class="col-6">
+                    <div class="border rounded p-3 text-center">
+                        <h3 class="text-success">15,000+</h3>
+                        <p class="mb-0">Personas beneficiadas</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="border rounded p-3 text-center">
+                        <h3 class="text-success">35</h3>
+                        <p class="mb-0">Comunidades atendidas</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="border rounded p-3 text-center">
+                        <h3 class="text-success">8</h3>
+                        <p class="mb-0">Países con presencia</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="border rounded p-3 text-center">
+                        <h3 class="text-success">200+</h3>
+                        <p class="mb-0">Voluntarios activos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img src="https://th.bing.com/th/id/R.df551e651cec511462d7c35c8626ea4c?rik=Y9%2bV4uUaTtiHfQ&pid=ImgRaw&r=0" class="img-fluid rounded" alt="Impacto de HumanAid">
+        </div>
+    </div>
+
+    <!-- Programs Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Nuestros Programas</h2>
+            <p class="lead">Conoce las áreas en las que trabajamos y cómo tu donación puede ayudar</p>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="https://th.bing.com/th/id/OIP.Y-JTxNaFH9nbohIL8qAhegHaE8?rs=1&pid=ImgDetMain" width="300" height="200" class="card-img-top" alt="Programa de Salud">
+                <div class="card-body">
+                    <h5 class="card-title">Salud</h5>
+                    <p class="card-text">Brindamos atención médica a comunidades sin acceso a servicios de salud, a través de clínicas móviles y campañas de vacunación.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="#" class="btn btn-outline-success">Conocer más</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="https://4.bp.blogspot.com/-wBNMqxXpB6w/WDiL5-7IP_I/AAAAAAAACxk/istDi1yX8pgXw3hnIsKTpp1JIW3PFm6iwCEw/s1600/alimentacion_ninos.jpg" width="300" height="200" class="card-img-top" alt="Programa de Alimentación">
+                <div class="card-body">
+                    <h5 class="card-title">Alimentación</h5>
+                    <p class="card-text">Distribuimos alimentos y suplementos nutricionales a familias en situación de vulnerabilidad y comunidades afectadas por desastres.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="#" class="btn btn-outline-success">Conocer más</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="https://th.bing.com/th/id/R.145c8df96df35d73d4cbfbd99364449a?rik=lleUIJIGaD15Aw&riu=http%3a%2f%2fwww.didactica.yucatan.gob.mx%2fmultimedia%2fboletines%2f230103_16.jpg&ehk=Mi1e2nDZuJWscF2o1KDzbe99aXzjeyxM50Imx%2fOTl4U%3d&risl=&pid=ImgRaw&r=0" width="300" height="200" class="card-img-top" alt="Programa de Educación">
+                <div class="card-body">
+                    <h5 class="card-title">Educación</h5>
+                    <p class="card-text">Apoyamos el desarrollo educativo mediante la construcción de escuelas, dotación de materiales y formación de docentes.</p>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a href="#" class="btn btn-outline-success">Conocer más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Section -->
+    <div id="donar" class="row mb-5 bg-light p-4 rounded">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">¿Cómo puedes ayudar?</h2>
+            <p class="lead">Tu contribución, sin importar el monto, hace una gran diferencia</p>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Donación Monetaria</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Tu aporte económico nos permite financiar nuestros programas y llegar a más comunidades.</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">Transferencia bancaria</li>
+                        <li class="list-group-item">Tarjeta de crédito/débito</li>
+                        <li class="list-group-item">PayPal</li>
+                    </ul>
+                    <a href="#" class="btn btn-success">Donar ahora</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Donación de Alimentos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Puedes donar alimentos no perecederos que distribuiremos a familias necesitadas.</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">Arroz, frijoles, pasta</li>
+                        <li class="list-group-item">Aceite, azúcar, sal</li>
+                        <li class="list-group-item">Enlatados y conservas</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Puntos de recepción</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Donación de Medicamentos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Los medicamentos que dones serán utilizados en nuestras clínicas móviles y campañas de salud.</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item">Antibióticos (sin caducar)</li>
+                        <li class="list-group-item">Analgésicos y antipiréticos</li>
+                        <li class="list-group-item">Material de curación</li>
+                    </ul>
+                    <a href="#" class="btn btn-info">Más información</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Historias de Impacto</h2>
+            <p class="lead">Conoce cómo tu ayuda transforma vidas</p>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="https://th.bing.com/th/id/OIP.yVBS7t3bIKFG37alsp3PgwHaE8?rs=1&pid=ImgDetMain" width="64" class="rounded-circle me-3" alt="Testimonio">
+                        <div>
+                            <h5 class="card-title mb-1">Comunidad San Miguel</h5>
+                            <p class="text-muted mb-0">Proyecto de agua potable</p>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        "Gracias a la instalación del sistema de agua potable, nuestra comunidad ha reducido drásticamente los casos de enfermedades gastrointestinales. Los niños ahora pueden asistir regularmente a la escuela y las familias tienen mejor calidad de vida."
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img src="https://th.bing.com/th/id/R.3bcbeff4ee0abb81ef150c9ea7e35730?rik=t3aMo1m4uUQi6g&riu=http%3a%2f%2fwww.newdesignfile.com%2fpostpic%2f2010%2f05%2ffree-stock-photos-people_102217.jpg&ehk=vGjIrntn5QyP%2fIXY2Ei7Iiz4%2fy%2byXvP8I8j0XxemwjI%3d&risl=&pid=ImgRaw&r=0" width="64" class="rounded-circle me-3" alt="Testimonio">
+                        <div>
+                            <h5 class="card-title mb-1">Escuela Nueva Esperanza</h5>
+                            <p class="text-muted mb-0">Programa educativo</p>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        "La construcción de nuestra nueva escuela y la dotación de materiales educativos ha permitido que 120 niños tengan acceso a educación de calidad. Ahora nuestros estudiantes tienen un espacio seguro y adecuado para aprender."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="p-5 bg-success text-white rounded">
+                <h2 class="fw-bold mb-3">Juntos podemos hacer la diferencia</h2>
+                <p class="lead mb-4">Tu donación, por pequeña que sea, puede cambiar la vida de una persona o una comunidad entera.</p>
+                <a  class="btn btn-light btn-lg px-4" asp-area="" asp-controller="Alimentoes" asp-action="Index">Donar ahora</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">¿Tienes preguntas?</h2>
+            <p class="lead">Estamos aquí para ayudarte</p>
+        </div>
+
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-telephone-fill text-success fs-1 mb-3"></i>
+                    <h5 class="card-title">Teléfono</h5>
+                    <p class="card-text">+1 809 123 456</p>
+                    <p class="text-muted">Lunes a viernes, 9:00 - 18:00</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4 mb-md-0">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-envelope-fill text-success fs-1 mb-3"></i>
+                    <h5 class="card-title">Email</h5>
+                    <p class="card-text">donaciones@humanaid.org</p>
+                    <p class="text-muted">Te respondemos en 24-48 horas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <i class="bi bi-geo-alt-fill text-success fs-1 mb-3"></i>
+                    <h5 class="card-title">Oficina Central</h5>
+                    <p class="card-text">Av Mexico, Esq Máximo Gómez, Santo Domingo, Rep. Dom</p>
+                    <p class="text-muted">Visitas con cita previa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">

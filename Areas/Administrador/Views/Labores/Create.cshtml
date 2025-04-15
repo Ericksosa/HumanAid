@@ -1,0 +1,139 @@
+﻿@model HumanAid.Models.Labores
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Nueva Labor</h1>
+            <p class="text-muted">Complete el formulario para registrar una nueva labor</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-briefcase me-2"></i>Información de la Labor
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="VoluntarioId" class="form-label fw-medium">
+                                <i class="bi bi-person me-2"></i>Voluntario
+                            </label>
+                            <select asp-for="VoluntarioId" class="form-select form-select-lg" asp-items="ViewBag.VoluntarioId">
+                                <option value="" selected disabled>-- Seleccione un voluntario --</option>
+                            </select>
+                            <div class="form-text">Seleccione el voluntario que realizará esta labor</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Descripcion" class="form-label fw-medium">
+                                <i class="bi bi-card-text me-2"></i>Descripción de la Labor
+                            </label>
+                            <input asp-for="Descripcion" class="form-control form-control-lg" placeholder="Ej: Asistencia médica, Gestión administrativa..." />
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            <div class="form-text">Describa brevemente la labor que se realizará</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Fecha" class="form-label fw-medium">
+                                <i class="bi bi-calendar me-2"></i>Fecha
+                            </label>
+                            <input asp-for="Fecha" class="form-control form-control-lg" type="date" />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                            <div class="form-text">Seleccione la fecha en que se realizará la labor</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Tipo" class="form-label fw-medium">
+                                <i class="bi bi-tags me-2"></i>Tipo de Labor
+                            </label>
+                            <select asp-for="Tipo" class="form-select form-select-lg">
+                                <option value="" selected disabled>-- Seleccione un tipo --</option>
+                                <option value="LaborAdministrativa">Labor Administrativa</option>
+                                <option value="LaborSanitaria">Labor Sanitaria</option>
+                            </select>
+                            <span asp-validation-for="Tipo" class="text-danger"></span>
+                            <div class="form-text">Seleccione el tipo de labor</div>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Estado" class="form-label fw-medium">
+                                <i class="bi bi-tags me-2"></i>Estado
+                            </label>
+                            <select asp-for="Estado" class="form-select form-select-lg">
+                                <option value="" selected disabled>-- Seleccione un estado --</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Realizado">Realizado</option>
+                            </select>
+                            <span asp-validation-for="Estado" class="text-danger"></span>
+                            <div class="form-text">Seleccione el tipo de labor</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Labor
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Información Importante
+                    </h5>
+                    <p class="card-text">Asegúrese de que toda la información proporcionada sea precisa y esté actualizada.</p>
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Verifique la disponibilidad del voluntario</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Confirme la fecha y hora de la labor</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-primary me-2"></i>
+                            <span>Proporcione una descripción clara y detallada</span>
+                        </li>
+                    </ul>
+                    <div class="alert alert-warning">
+                        <div class="d-flex">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>
+                                <strong>Importante:</strong> Asegúrese de que el voluntario esté capacitado para la labor asignada.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
