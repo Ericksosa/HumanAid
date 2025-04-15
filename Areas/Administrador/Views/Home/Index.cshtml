@@ -7,7 +7,6 @@
 
 <style>
     body {
-        font-family: 'Poppins', sans-serif;
         background-color: #f8f9fa;
     }
 
@@ -189,7 +188,7 @@
   function actualizarGraficoSedes(categorias, seriesData) {
       var chart = new ApexCharts(document.querySelector("#graficoSedes"), {
           chart: { type: 'bar', height: 300 },
-          colors: ['#008FFB'],
+          colors: ['#008FFB', '#FF4560', '#775DD0'],
           series: [{ name: 'Total Socios', data: seriesData }],
           xaxis: { categories: categorias }
       });
