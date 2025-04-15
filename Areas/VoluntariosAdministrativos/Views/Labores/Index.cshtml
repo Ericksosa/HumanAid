@@ -1,0 +1,119 @@
+﻿@model IEnumerable<HumanAid.Models.Labores>
+
+@{
+    ViewData["Title"] = "Labores";
+    int currentPage = ViewData["CurrentPage"] != null ? (int)ViewData["CurrentPage"] : 1;
+    int totalPages = ViewData["TotalPages"] != null ? (int)ViewData["TotalPages"] : 1;
+    string searchString = ViewData["SearchString"] as string;
+    string currentSort = ViewData["CurrentSort"] as string;
+    string dateSortParam = String.IsNullOrEmpty(currentSort) ? "date_desc" : "";
+}
+
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">Labores</h1>
+            <p class="text-muted">Gestiona tus labores como voluntario</p>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <form method="get" asp-action="Index">
+                <div class="input-group">
+                    <input type="text" name="searchString" value="@searchString" class="form-control" placeholder="Buscar labores...">
+                    <input type="hidden" name="sortOrder" value="@currentSort" />
+                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Descripcion)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <a asp-action="Index" asp-route-sortOrder="@dateSortParam" asp-route-searchString="@searchString" class="fw-semibold">
+                                    Fecha de Asignación @Html.Raw(currentSort == "date_desc" ? "&#9650;" : "&#9660;")
+                                </a>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Tipo)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Estado)</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Descripcion)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Fecha)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Tipo)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Estado)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                        <p>No hay labores registradas</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1, searchString = searchString, sortOrder = currentSort })">Anterior</a>
+                    </li>
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, searchString = searchString, sortOrder = currentSort })">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1, searchString = searchString, sortOrder = currentSort })">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+

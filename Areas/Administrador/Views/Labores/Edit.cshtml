@@ -1,0 +1,151 @@
+﻿@model HumanAid.Models.Labores
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Editar Labor</h1>
+            <p class="text-muted">Modifique la información de la labor</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar Información de la Labor #@Model.LaborId
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="LaborId" />
+
+                        <div class="mb-4">
+                            <label asp-for="VoluntarioId" class="form-label fw-medium">
+                                <i class="bi bi-person me-2"></i>Voluntario
+                            </label>
+                            <select asp-for="VoluntarioId" class="form-select form-select-lg" asp-items="ViewBag.VoluntarioId"></select>
+                            <span asp-validation-for="VoluntarioId" class="text-danger"></span>
+                            <div class="form-text">Seleccione el voluntario que realizará esta labor</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Descripcion" class="form-label fw-medium">
+                                <i class="bi bi-card-text me-2"></i>Descripción de la Labor
+                            </label>
+                            <input asp-for="Descripcion" class="form-control form-control-lg" placeholder="Ej: Asistencia médica, Gestión administrativa..." />
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            <div class="form-text">Describa brevemente la labor que se realizará</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Fecha" class="form-label fw-medium">
+                                <i class="bi bi-calendar me-2"></i>Fecha
+                            </label>
+                            <input asp-for="Fecha" class="form-control form-control-lg" type="date" />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                            <div class="form-text">Seleccione la fecha en que se realizará la labor</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Tipo" class="form-label fw-medium">
+                                <i class="bi bi-tags me-2"></i>Tipo de Labor
+                            </label>
+                            <select asp-for="Tipo" class="form-select form-select-lg">
+                                <option value="" selected disabled>-- Seleccione un tipo --</option>
+                                <option value="LaborAdministrativa">Labor Administrativa</option>
+                                <option value="LaborSanitaria">Labor Sanitaria</option>
+                            </select>
+                            <span asp-validation-for="Tipo" class="text-danger"></span>
+                            <div class="form-text">Seleccione el tipo de labor</div>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Estado" class="form-label fw-medium">
+                                <i class="bi bi-tags me-2"></i>Estado
+                            </label>
+                            <select asp-for="Estado" class="form-select form-select-lg">
+                                <option value="" selected disabled>-- Seleccione un estado --</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Realizado">Realizado</option>
+                            </select>
+                            <span asp-validation-for="Estado" class="text-danger"></span>
+                            <div class="form-text">Seleccione el tipo de labor</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.LaborId" class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-info-circle me-2"></i>Ver Detalles
+                                </a>
+                                <button type="submit" class="btn btn-warning btn-lg px-4">
+                                    <i class="bi bi-save me-2"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Estado de la Labor
+                    </h5>
+                    <p class="card-text">Está editando la información de una labor existente. Los cambios se aplicarán una vez guardados.</p>
+
+                    <div class="d-flex align-items-center mb-3 mt-4">
+                        <div class="bg-success rounded-circle p-2 me-3">
+                            <i class="bi bi-calendar-check text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Fecha de registro</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-5).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registrado por</div>
+                            <div class="fw-medium">Administrador</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning rounded-circle p-2 me-3">
+                            <i class="bi bi-clock-history text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Última modificación</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

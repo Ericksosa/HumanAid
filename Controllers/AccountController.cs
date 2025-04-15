@@ -31,10 +31,11 @@ namespace HumanAid.Controllers
             if (usuario != null)
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, usuario.Correo),
-                    new Claim(ClaimTypes.Role, usuario.Rol.Nombre)
-                };
+        {
+            new Claim(ClaimTypes.Name, usuario.Correo),
+            new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
+            new Claim(ClaimTypes.NameIdentifier, usuario.UsuarioId.ToString()) // Add user ID to claims
+        };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -60,6 +61,8 @@ namespace HumanAid.Controllers
             ViewBag.Mensaje = "Correo o contraseña incorrectos.";
             return View();
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()

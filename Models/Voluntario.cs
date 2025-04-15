@@ -42,5 +42,7 @@ namespace HumanAid.Models
         //Relacion con voluntarioSanitario
         public VoluntarioSanitario? VoluntarioSanitario { get; set; }
 
+        public ICollection<Labores>? Labores { get; set; }
+
     }
 }
