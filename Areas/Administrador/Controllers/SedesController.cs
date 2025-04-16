@@ -22,9 +22,29 @@ namespace HumanAid.Areas.Administrador.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, string searchString = null)
         {
-            return View(await _context.Sede.ToListAsync());
+            var sedes = from s in _context.Sede
+                        select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                sedes = sedes.Where(s => s.Nombre.Contains(searchString));
+            }
+
+            int pageSize = 7;
+            int totalSedes = sedes.Count();
+            int totalPages = (int)Math.Ceiling(totalSedes / (double)pageSize);
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = totalPages;
+            ViewData["SearchString"] = searchString;
+
+            var paginatedSedes = sedes.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return View(paginatedSedes);
+
+            //return View(await _context.Sede.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -160,32 +180,35 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            var sede = await _context.Sede
+                .Include(s => s.EnvioSedes)
+                .FirstOrDefaultAsync(s => s.SedeId == id);
+
+            if (sede == null)
+            {
+                TempData["danger"] = "Sede no encontrada.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (sede.EnvioSedes != null && sede.EnvioSedes.Any())
+            {
+                TempData["danger"] = "No se puede eliminar la sede porque está asociada a uno o más envíos.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             try
             {
-                var sede = await _context.Sede.FindAsync(id);
-                if (sede != null)
-                {
-                    _context.Sede.Remove(sede);
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    TempData["success"] = "Sede eliminada exitosamente.";
-                }
-                else
-                {
-                    TempData["danger"] = "Sede no encontrada.";
-                }
+                _context.Sede.Remove(sede);
+                await _context.SaveChangesAsync();
+                TempData["success"] = "Sede eliminada exitosamente.";
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 TempData["danger"] = $"Ocurrió un error: {ex.Message} - {ex.InnerException?.Message}";
             }
 
             return RedirectToAction(nameof(Index));
         }
-
-
 
 
         private bool SedeExists(int id)

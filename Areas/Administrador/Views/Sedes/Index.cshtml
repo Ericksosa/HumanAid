@@ -3,57 +3,140 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ciudad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Direccion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Director)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaFundacion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ciudad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Director)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaFundacion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SedeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SedeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SedeId">Delete</a>
-            </td>
-        </tr>
+@{
+    int currentPage = ViewData["CurrentPage"] != null ? (int)ViewData["CurrentPage"] : 0;
+    int totalPages = ViewData["TotalPages"] != null ? (int)ViewData["TotalPages"] : 0;
+    string searchString = ViewData["SearchString"] as string;
 }
-    </tbody>
-</table>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">Sedes</h1>
+            <p class="text-muted">Gestiona las sedes de la organización</p>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="bi bi-plus-circle me-2"></i>Crear Nueva Sede
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form method="get" asp-action="Index">
+                <div class="input-group">
+                    <input type="text" name="searchString" class="form-control" placeholder="Buscar sedes...">
+                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Nombre)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Ciudad)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Direccion)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Director)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.FechaFundacion)</span>
+                            </th>
+                            <th class="py-3 px-4 border-0 text-center">
+                                <span class="fw-semibold">Acciones</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Nombre)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Ciudad)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Direccion)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.Director)
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        @Html.DisplayFor(modelItem => item.FechaFundacion)
+                                    </td>
+                                    <td class="py-3 px-4 text-center">
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Edit" asp-route-id="@item.SedeId" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-pencil me-1"></i> Editar
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@item.SedeId" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-info-circle me-1"></i> Detalles
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.SedeId" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash me-1"></i> Eliminar
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                                        <p>No hay sedes registradas</p>
+                                        <a asp-action="Create" class="btn btn-sm btn-outline-success">Registrar primera sede</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1, searchString = searchString })">Anterior</a>
+                    </li>
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, searchString = searchString })">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1, searchString = searchString })">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
