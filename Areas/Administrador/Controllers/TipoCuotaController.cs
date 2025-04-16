@@ -37,6 +37,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         [HttpPost]
         public async Task<IActionResult> AsignarSocios(int tipoCuotaId, List<int> socioIds)
         {
+            var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 // Buscar el tipo de cuota con sus socios
@@ -46,7 +47,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 if (tipoCuota == null)
                 {
-                    TempData["ErrorMessage"] = "No se encontró la cuota.";
+                    TempData["danger"] = "No se encontró la cuota.";
                     return RedirectToAction("Index");
                 }
 
@@ -64,11 +65,11 @@ namespace HumanAid.Areas.Administrador.Controllers
                 // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Socios asignados correctamente.";
+                TempData["success"] = "Cuota asignado a socios correctamente.";
             }
             catch (Exception)
             {
-                TempData["ErrorMessage"] = "Ocurrió un error al asignar los socios.";
+                TempData["danger"] = "Ocurrió un error al asignar los socios.";
             }
 
             // Redirigir de vuelta a la lista
@@ -114,15 +115,20 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TipoCuotaId,Nombre,Importe,Descripcion")] TipoCuota tipoCuota)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 _context.Add(tipoCuota);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                TempData["success"] = "Cuota creada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"Error al crear la cuota: {ex.Message}");
+                TempData["danger"] = "Error al crear la cuota: " + ex.Message;
                 return StatusCode(500, "Error al procesar la solicitud.");
             }
         }
@@ -152,6 +158,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TipoCuotaId,Nombre,Importe,Descripcion")] TipoCuota tipoCuota)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             if (id != tipoCuota.TipoCuotaId)
             {
                 return NotFound();
@@ -161,6 +168,8 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 _context.Update(tipoCuota);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                TempData["success"] = "Cuota actualizada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException ex)
@@ -177,6 +186,8 @@ namespace HumanAid.Areas.Administrador.Controllers
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+                TempData["danger"] = "Error al actualizar la cuota: " + ex.Message;
                 Console.WriteLine($"Error inesperado al actualizar la cuota: {ex.Message}");
                 return StatusCode(500, "Error inesperado al actualizar la cuota.");
             }
@@ -206,6 +217,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var tipoCuota = await _context.TipoCuota.FindAsync(id);
@@ -216,12 +228,15 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 _context.TipoCuota.Remove(tipoCuota);
                 await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                TempData["success"] = "Cuota eliminada correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al eliminar la cuota: {ex.Message}");
                 return StatusCode(500, "Error al eliminar la cuota.");
+                TempData["danger"] = "Error al eliminar la cuota: " + ex.Message;
             }
         }
 

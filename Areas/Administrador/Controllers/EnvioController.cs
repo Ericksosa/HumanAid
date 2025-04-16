@@ -128,7 +128,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 // Confirmar la transacción
                 await transaction.CommitAsync();
-                TempData["SuccessMessage"] = "Envio creado correctamente.";
+                TempData["success"] = "Envio creado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -143,7 +143,8 @@ namespace HumanAid.Areas.Administrador.Controllers
                 ModelState.AddModelError("", ex.Message);
 
                 RecargarSede(); // Llamar a la funcion recargar sede
-                TempData["ErrorMessage"] = "Ocurrió un error al crear el envio.";
+                await transaction.RollbackAsync();
+                TempData["danger"] = "Ocurrió un error al crear el envio.";
                 return View(envio);
             }
         }
@@ -173,6 +174,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EnvioId,Fecha,Destino,TipoEnvio,Estado,CodigoEnvio,FechaSalida")] Envio envio, int[] sedeIds)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             if (id != envio.EnvioId)
             {
                 return NotFound();
@@ -222,8 +224,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Update(envioToUpdate);
                 await _context.SaveChangesAsync();
 
-                TempData["SuccessMessage"] = "Envio editado correctamente.";
-
+                TempData["success"] = "Envio editado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -239,8 +240,9 @@ namespace HumanAid.Areas.Administrador.Controllers
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 ViewBag.ErrorMessage = ex.Message;
-                TempData["ErrorMessage"] = "Ocurrió un error al editar el envio.";
+                TempData["danger"] = "Ocurrió un error al editar el envio.";
                 RecargarSede(); // Recargar la lista de sedes
                 return View(envio);
             }
@@ -254,6 +256,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Envio/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             if (id == null)
             {
                 return NotFound();
@@ -276,6 +279,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var envio = await _context.Envio
@@ -296,17 +300,19 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Alimento.RemoveRange(envio.Alimentos);
                 _context.Medicamento.RemoveRange(envio.Medicamentos);
                 _context.MisionHumanitaria.RemoveRange(envio.MisionesHumanitarias);
-                _context.Envio.Remove(envio);
+                _context.Envio.Remove(envio);            
+                await transaction.CommitAsync();
                 await _context.SaveChangesAsync();
-
                 TempData["SuccessMessage"] = "Envío eliminado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"Ocurrió un error al intentar eliminar el envío: {ex.Message}";
+                await transaction.RollbackAsync();
+                TempData["danger"] = $"Ocurrió un error al intentar eliminar el envío: {ex.Message}";
                 return RedirectToAction("Delete", new { id });
             }
+
         }
 
         private void RecargarSede()  // Recargar la Sede
