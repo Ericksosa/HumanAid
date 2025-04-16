@@ -21,7 +21,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Socio/Socios
-        public async Task<IActionResult> Index(string searchNombre)
+        public async Task<IActionResult> Index(int page = 1, string searchNombre = null)
         {
             var sociosQuery = _context.Socio
                 .Include(s => s.Sede)
@@ -35,7 +35,17 @@ namespace HumanAid.Areas.Administrador.Controllers
                 sociosQuery = sociosQuery.Where(s => s.Nombre.Contains(searchNombre));
             }
 
-            return View(await sociosQuery.ToListAsync());
+            int pageSize = 7;
+            int totalSocios = await sociosQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalSocios / (double)pageSize);
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = totalPages;
+            ViewData["SearchNombre"] = searchNombre;
+
+            var paginatedSocios = await sociosQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return View(paginatedSocios);
         }
 
         // GET: Socio/Socios/Details/5
