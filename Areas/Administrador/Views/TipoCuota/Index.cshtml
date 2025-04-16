@@ -1,48 +1,67 @@
 ﻿@model IEnumerable<HumanAid.Models.TipoCuota>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tipos de Cuota";
 }
 
-<h1>Index</h1>
+<div class="container mb-5">
+    <!-- Header -->
+    <div class="row mb-4 text-center">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Gestión de Tipos de Cuota</h1>
+            <p class="text-muted">Administre los diferentes tipos de cuota disponibles</p>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Importe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th> Acciones </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Importe)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TipoCuotaId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TipoCuotaId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.TipoCuotaId">Delete</a> |
-                    <a asp-action="AsignarSocios" asp-route-id="@item.TipoCuotaId" class="btn btn-primary btn-sm ms-3">Asignar Socio</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Botón de creación -->
+ <div class="d-flex justify-content-start mb-3">
+    <a asp-action="Create" class="btn btn-success btn-sm">
+        <i class="bi bi-plus-circle me-2"></i> Crear Nuevo
+    </a>
+</div>
+
+
+    <!-- Tabla estilizada -->
+    <div class="card shadow-sm border-0.3">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="bg-light text-center">
+                        <tr>
+                            <th class="py-3 px-4">@Html.DisplayNameFor(model => model.Nombre)</th>
+                            <th class="py-3 px-4">@Html.DisplayNameFor(model => model.Importe)</th>
+                            <th class="py-3 px-4">@Html.DisplayNameFor(model => model.Descripcion)</th>
+                            <th class="py-3 px-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                                <tr class="text-center">
+                                    <td class="py-3 px-4">@Html.DisplayFor(modelItem => item.Nombre)</td>
+                                    <td class="py-3 px-4">@Html.DisplayFor(modelItem => item.Importe)</td>
+                                    <td class="py-3 px-4">@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                                    <td class="py-3 px-4 text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a asp-action="Edit" asp-route-id="@item.TipoCuotaId" class="btn btn-sm btn-warning">
+                                                <i class="bi bi-pencil"></i> Editar
+                                            </a>
+                                            <a asp-action="Details" asp-route-id="@item.TipoCuotaId" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-info-circle"></i> Detalles
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.TipoCuotaId" class="btn btn-sm btn-danger">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </a>
+                                            <a asp-action="AsignarSocios" asp-route-id="@item.TipoCuotaId" class="btn btn-sm btn-success">
+                                                <i class="bi bi-people"></i> Asignar Socio
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
