@@ -4,53 +4,114 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Sede</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ciudad" class="control-label"></label>
-                <input asp-for="Ciudad" class="form-control" />
-                <span asp-validation-for="Ciudad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Director" class="control-label"></label>
-                <input asp-for="Director" class="form-control" />
-                <span asp-validation-for="Director" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaFundacion" class="control-label"></label>
-                <input asp-for="FechaFundacion" class="form-control" />
-                <span asp-validation-for="FechaFundacion" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Nueva Sede</h1>
+            <p class="text-muted">Complete el formulario para registrar una nueva sede</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-building me-2"></i>Información de la Sede
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-medium">
+                                <i class="bi bi-building me-2"></i>Nombre de la Sede
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Nombre de la sede" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Ciudad" class="form-label fw-medium">
+                                <i class="bi bi-geo-alt me-2"></i>Ciudad
+                            </label>
+                            <input asp-for="Ciudad" class="form-control form-control-lg" placeholder="Ciudad" />
+                            <span asp-validation-for="Ciudad" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Direccion" class="form-label fw-medium">
+                                <i class="bi bi-map me-2"></i>Dirección
+                            </label>
+                            <input asp-for="Direccion" class="form-control form-control-lg" placeholder="Dirección" />
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Director" class="form-label fw-medium">
+                                <i class="bi bi-person me-2"></i>Director
+                            </label>
+                            <input asp-for="Director" class="form-control form-control-lg" placeholder="Director" />
+                            <span asp-validation-for="Director" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="FechaFundacion" class="form-label fw-medium">
+                                <i class="bi bi-calendar me-2"></i>Fecha de Fundación
+                            </label>
+                            <input asp-for="FechaFundacion" class="form-control form-control-lg" type="date" />
+                            <span asp-validation-for="FechaFundacion" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Sede
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Información Importante
+                    </h5>
+                    <p class="card-text">Asegúrese de que todos los campos estén completos y correctos antes de guardar la nueva sede.</p>
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Verifique la dirección y la ciudad
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Asegúrese de que el nombre del director sea correcto
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>Confirme la fecha de fundación
+                        </li>
+                    </ul>
+                    <p class="card-text">Para más información sobre la creación de sedes, contacte con nuestro equipo.</p>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-question-circle me-2"></i>Ayuda con Sedes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-} 
+}
