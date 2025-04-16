@@ -1,10 +1,12 @@
-﻿@{
+﻿@model HumanAid.Models.Socio
+
+@{
     ViewData["Title"] = "Home - Socio";
 }
 
 <div class="bg-primary bg-gradient text-white p-5 rounded-3 mb-4">
     <div class="container-fluid py-3">
-        <h1 class="display-4 fw-bold">Bienvenido al área de socios</h1>
+        <h1 class="display-4 fw-bold">Bienvenido/a, @Model.Nombre</h1>
         <p class="col-md-8 fs-4">Gracias a tu apoyo continuo, HumanAid puede seguir transformando vidas y construyendo esperanza en las comunidades más vulnerables del mundo.</p>
         <a class="btn btn-light btn-lg mt-2" asp-area="" asp-controller="Socio" asp-action="Pagos">Apoyar a la causa</a>
     </div>
@@ -96,7 +98,6 @@
     </div>
 
     <!-- Donation Section -->
-
     <!-- Testimonials -->
     <div class="row mb-5">
         <div class="col-12 text-center mb-4">
