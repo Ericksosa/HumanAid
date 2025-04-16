@@ -21,7 +21,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Administrador/Usuarios
-        public async Task<IActionResult> Index(string searchCorreo, int? RolId)
+        public async Task<IActionResult> Index(string searchCorreo, int? RolId, int page = 1)
         {
             ViewBag.Roles = await _context.Rol.ToListAsync();
 
@@ -37,8 +37,18 @@ namespace HumanAid.Areas.Administrador.Controllers
                 usuariosQuery = usuariosQuery.Where(u => u.RolId == RolId.Value);
             }
 
-            var usuarios = await usuariosQuery.ToListAsync();
-            return View(usuarios);
+            int pageSize = 7;
+            int totalUsuarios = await usuariosQuery.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalUsuarios / (double)pageSize);
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = totalPages;
+            ViewData["SearchCorreo"] = searchCorreo;
+            ViewData["RolId"] = RolId;
+
+            var paginatedUsuarios = await usuariosQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return View(paginatedUsuarios);
         }
 
         // GET: Administrador/Usuarios/Details/5
