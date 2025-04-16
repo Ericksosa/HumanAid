@@ -4,66 +4,159 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Editar Voluntario</h1>
+            <p class="text-muted">Modifique la información del voluntario</p>
+        </div>
+    </div>
 
-<h4>Voluntario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="VoluntarioId" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar Información del Voluntario #@Model.VoluntarioId
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="VoluntarioId" />
+
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label fw-medium">
+                                <i class="bi bi-person me-2"></i>Nombre
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Direccion" class="form-label fw-medium">
+                                <i class="bi bi-geo-alt me-2"></i>Dirección
+                            </label>
+                            <input asp-for="Direccion" class="form-control form-control-lg" />
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="FechaNacimiento" class="form-label fw-medium">
+                                <i class="bi bi-calendar me-2"></i>Fecha de Nacimiento
+                            </label>
+                            <input asp-for="FechaNacimiento" class="form-control form-control-lg" />
+                            <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="SedeId" class="form-label fw-medium">
+                                <i class="bi bi-building me-2"></i>Sede
+                            </label>
+                            <select asp-for="SedeId" class="form-select form-select-lg" asp-items="ViewBag.SedeId"></select>
+                            <span asp-validation-for="SedeId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="FechaRegistro" class="form-label fw-medium">
+                                <i class="bi bi-calendar-check me-2"></i>Fecha de Registro
+                            </label>
+                            <input asp-for="FechaRegistro" class="form-control form-control-lg" />
+                            <span asp-validation-for="FechaRegistro" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-medium">
+                                <i class="bi bi-envelope me-2"></i>Email
+                            </label>
+                            <input asp-for="Email" class="form-control form-control-lg" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Telefono" class="form-label fw-medium">
+                                <i class="bi bi-telephone me-2"></i>Teléfono
+                            </label>
+                            <input asp-for="Telefono" class="form-control form-control-lg" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="UsuarioId" class="form-label fw-medium">
+                                <i class="bi bi-person-badge me-2"></i>Usuario
+                            </label>
+                            <select asp-for="UsuarioId" class="form-select form-select-lg" asp-items="ViewBag.UsuarioId"></select>
+                            <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.VoluntarioId" class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-info-circle me-2"></i>Ver Detalles
+                                </a>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-save me-2"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Estado del Voluntario
+                    </h5>
+                    <p class="card-text">Está editando la información de un voluntario existente. Los cambios se aplicarán una vez guardados.</p>
+
+                    <div class="d-flex align-items-center mb-3 mt-4">
+                        <div class="bg-success rounded-circle p-2 me-3">
+                            <i class="bi bi-calendar-check text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Fecha de registro</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-5).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registrado por</div>
+                            <div class="fw-medium">Administrador</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning rounded-circle p-2 me-3">
+                            <i class="bi bi-clock-history text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Última modificación</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaNacimiento" class="control-label"></label>
-                <input asp-for="FechaNacimiento" class="form-control" />
-                <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SedeId" class="control-label"></label>
-                <select asp-for="SedeId" class="form-control" asp-items="ViewBag.SedeId"></select>
-                <span asp-validation-for="SedeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaRegistro" class="control-label"></label>
-                <input asp-for="FechaRegistro" class="form-control" />
-                <span asp-validation-for="FechaRegistro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

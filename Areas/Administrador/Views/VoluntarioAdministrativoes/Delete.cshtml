@@ -1,39 +1,133 @@
 ﻿@model HumanAid.Models.VoluntarioAdministrativo
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Voluntario Administrativo";
 }
 
-<h1>Delete</h1>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Eliminar Voluntario Administrativo</h1>
+            <p class="text-muted">Está a punto de eliminar permanentemente este voluntario administrativo</p>
+        </div>
+    </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>VoluntarioAdministrativo</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Profesion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Profesion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Departamento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Departamento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Voluntario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Voluntario.Direccion)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="VoluntarioAdministrativoId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Warning Card -->
+            <div class="card border-danger border-2 shadow-sm mb-4">
+                <div class="card-header bg-danger text-white py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                        <h5 class="card-title mb-0">Confirmación de Eliminación</h5>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning">
+                        <div class="d-flex">
+                            <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+                            <div>
+                                <h6 class="alert-heading">¿Está seguro de que desea eliminar este voluntario administrativo?</h6>
+                                <p class="mb-0">Esta acción no se puede deshacer. Una vez eliminado, toda la información asociada a este voluntario administrativo se perderá permanentemente.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light mt-4 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Información del voluntario administrativo a eliminar</h5>
+
+                            <div class="row g-3">
+                                <!-- Profesión -->
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-briefcase-fill text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <div class="text-muted small">
+                                                @Html.DisplayNameFor(model => model.Profesion)
+                                            </div>
+                                            <div class="fw-bold fs-5">
+                                                @Html.DisplayFor(model => model.Profesion)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Departamento -->
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-building text-success fs-4 me-3"></i>
+                                        <div>
+                                            <div class="text-muted small">
+                                                @Html.DisplayNameFor(model => model.Departamento)
+                                            </div>
+                                            <div class="fw-bold fs-5">
+                                                @Html.DisplayFor(model => model.Departamento)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Voluntario -->
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-person-fill text-info fs-4 me-3"></i>
+                                        <div>
+                                            <div class="text-muted small">
+                                                @Html.DisplayNameFor(model => model.Voluntario)
+                                            </div>
+                                            <div class="fw-bold fs-5">
+                                                @Html.DisplayFor(model => model.Voluntario.Nombre)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" class="mt-4">
+                        <input type="hidden" asp-for="VoluntarioAdministrativoId" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Cancelar y Volver
+                            </a>
+                            <button type="submit" class="btn btn-danger btn-lg" onclick="return confirm('¿Está completamente seguro de eliminar este voluntario administrativo?');">
+                                <i class="bi bi-trash me-2"></i>Eliminar Permanentemente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Info Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Información Importante
+                    </h5>
+                    <p class="card-text">Antes de eliminar este voluntario administrativo, tenga en cuenta lo siguiente:</p>
+
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-dash-circle text-danger me-2"></i>
+                            <span>Se eliminarán todos los registros asociados</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-dash-circle text-danger me-2"></i>
+                            <span>Esta acción no se puede deshacer</span>
+                        </li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">
+                            <i class="bi bi-dash-circle text-danger me-2"></i>
+                            <span>Los informes históricos se verán afectados</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+

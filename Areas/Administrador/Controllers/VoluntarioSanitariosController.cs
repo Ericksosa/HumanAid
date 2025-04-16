@@ -23,11 +23,31 @@ namespace HumanAid.Controllers
         }
 
         // GET: VoluntarioSanitarios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, int page = 1)
         {
-            var humanAidDbContext = _context.VoluntarioSanitario.Include(v => v.Voluntario);
-            return View(await humanAidDbContext.ToListAsync());
+            int pageSize = 7;
+
+            var voluntariosSanitarios = from v in _context.VoluntarioSanitario.Include(v => v.Voluntario)
+                                        select v;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                voluntariosSanitarios = voluntariosSanitarios.Where(s => s.Voluntario.Nombre.Contains(searchString));
+            }
+
+            int totalItems = await voluntariosSanitarios.CountAsync();
+            var items = await voluntariosSanitarios
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)totalItems / pageSize);
+            ViewData["SearchString"] = searchString;
+
+            return View(items);
         }
+
 
         // GET: VoluntarioSanitarios/Details/5
         public async Task<IActionResult> Details(int? id)

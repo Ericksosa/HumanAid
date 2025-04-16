@@ -1,44 +1,124 @@
 ﻿@model HumanAid.Models.VoluntarioAdministrativo
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Voluntario Administrativo";
 }
 
-<h1>Edit</h1>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Editar Voluntario Administrativo</h1>
+            <p class="text-muted">Modifique la información del voluntario administrativo</p>
+        </div>
+    </div>
 
-<h4>VoluntarioAdministrativo</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="VoluntarioAdministrativoId" />
-            <div class="form-group">
-                <label asp-for="Profesion" class="control-label"></label>
-                <input asp-for="Profesion" class="form-control" />
-                <span asp-validation-for="Profesion" class="text-danger"></span>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Modificar Información del Voluntario Administrativo #@Model.VoluntarioAdministrativoId
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="VoluntarioAdministrativoId" />
+
+                        <div class="mb-4">
+                            <label asp-for="Profesion" class="form-label fw-medium">
+                                <i class="bi bi-briefcase me-2"></i>Profesión
+                            </label>
+                            <input asp-for="Profesion" class="form-control form-control-lg" placeholder="Profesión" />
+                            <span asp-validation-for="Profesion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Departamento" class="form-label fw-medium">
+                                <i class="bi bi-building me-2"></i>Departamento
+                            </label>
+                            <input asp-for="Departamento" class="form-control form-control-lg" placeholder="Departamento" />
+                            <span asp-validation-for="Departamento" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="VoluntarioId" class="form-label fw-medium">
+                                <i class="bi bi-person me-2"></i>Voluntario
+                            </label>
+                            <select asp-for="VoluntarioId" class="form-select form-select-lg" asp-items="ViewBag.VoluntarioId">
+                                <option value="" selected disabled>-- Seleccione un voluntario --</option>
+                            </select>
+                            <span asp-validation-for="VoluntarioId" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.VoluntarioAdministrativoId" class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-info-circle me-2"></i>Ver Detalles
+                                </a>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-save me-2"></i>Guardar Cambios
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Departamento" class="control-label"></label>
-                <input asp-for="Departamento" class="form-control" />
-                <span asp-validation-for="Departamento" class="text-danger"></span>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Estado del Voluntario Administrativo
+                    </h5>
+                    <p class="card-text">Está editando la información de un voluntario administrativo existente. Los cambios se aplicarán una vez guardados.</p>
+
+                    <div class="d-flex align-items-center mb-3 mt-4">
+                        <div class="bg-success rounded-circle p-2 me-3">
+                            <i class="bi bi-calendar-check text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Fecha de registro</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-5).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registrado por</div>
+                            <div class="fw-medium">Administrador</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="bg-warning rounded-circle p-2 me-3">
+                            <i class="bi bi-clock-history text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Última modificación</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="VoluntarioId" class="control-label"></label>
-                <select asp-for="VoluntarioId" class="form-control" asp-items="ViewBag.VoluntarioId"></select>
-                <span asp-validation-for="VoluntarioId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

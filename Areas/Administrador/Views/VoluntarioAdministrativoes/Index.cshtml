@@ -1,47 +1,120 @@
 ﻿@model IEnumerable<HumanAid.Models.VoluntarioAdministrativo>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Voluntarios Administrativos";
+    int currentPage = (int)ViewData["CurrentPage"];
+    int totalPages = (int)ViewData["TotalPages"];
+    string searchString = ViewData["SearchString"] as string;
 }
 
-<h1>Index</h1>
+<div class="container-fluid mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-5 fw-bold">Gestión de Voluntarios Administrativos</h1>
+            <p class="text-muted">Gestiona los voluntarios administrativos de HumanAid</p>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Profesion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Departamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Voluntario)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Profesion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Departamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Voluntario.Nombre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VoluntarioAdministrativoId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VoluntarioAdministrativoId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VoluntarioAdministrativoId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Action Bar -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <a asp-action="Create" class="btn btn-success">Nuevo Voluntario Administrativo</a>
+        </div>
+        <div class="col-md-6">
+            <form method="get" asp-action="Index">
+                <div class="input-group">
+                    <input type="text" name="searchString" class="form-control" placeholder="Buscar voluntarios administrativos..." value="@searchString">
+                    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-sm align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="py-2 px-2 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Voluntario.Nombre)</span>
+                            </th>
+                            <th class="py-2 px-2 border-0">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Profesion)</span>
+                            </th>
+                            <th class="py-2 px-2 border-0 d-none d-md-table-cell">
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Departamento)</span>
+                            </th>
+                            <th class="py-2 px-2 border-0 text-center">
+                                <span class="fw-semibold">Acciones</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="py-2 px-2">
+                                        <span class="badge bg-light text-dark">@Html.DisplayFor(modelItem => item.Voluntario.Nombre)</span>
+                                    </td>
+                                    <td class="py-2 px-2">
+                                        <span class="fw-medium">@Html.DisplayFor(modelItem => item.Profesion)</span>
+                                    </td>
+                                    <td class="py-2 px-2 d-none d-md-table-cell">
+                                        <small>@Html.DisplayFor(modelItem => item.Departamento)</small>
+                                    </td>                                    
+                                    <td class="py-2 px-2 text-center">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a asp-action="Edit" asp-route-id="@item.VoluntarioAdministrativoId" class="btn btn-warning">Editar</a>
+                                            <a asp-action="Details" asp-route-id="@item.VoluntarioAdministrativoId" class="btn btn-primary">Detalles</a>
+                                            <a asp-action="Delete" asp-route-id="@item.VoluntarioAdministrativoId" class="btn btn-danger">Eliminar</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <p>No hay voluntarios administrativos registrados</p>
+                                        <a asp-action="Create" class="btn btn-sm btn-outline-success">Registrar primer voluntario administrativo</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1, searchString = searchString })">Anterior</a>
+                    </li>
+
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, searchString = searchString })">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1, searchString = searchString })">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

@@ -1,48 +1,89 @@
 ﻿@model HumanAid.Models.VoluntarioSanitario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Voluntario Sanitario";
 }
 
-<h1>Create</h1>
-
-<h4>VoluntarioSanitario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Profesion" class="control-label"></label>
-                <input asp-for="Profesion" class="form-control" />
-                <span asp-validation-for="Profesion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Disponibilidad" class="control-label"></label>
-                <div>
-                    <input type="radio" asp-for="Disponibilidad" value="true" /> Verdadero
-                    <input type="radio" asp-for="Disponibilidad" value="false" /> Falso
-                </div>
-                <span asp-validation-for="Disponibilidad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NumeroTrabajosRealizados" class="control-label"></label>
-                <input asp-for="NumeroTrabajosRealizados" class="form-control" />
-                <span asp-validation-for="NumeroTrabajosRealizados" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VoluntarioId" class="control-label"></label>
-                <select asp-for="VoluntarioId" class="form-control" asp-items="ViewBag.VoluntarioId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Nuevo Voluntario Sanitario</h1>
+            <p class="text-muted">Complete el formulario para registrar un nuevo voluntario sanitario</p>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">Información del Voluntario Sanitario</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Profesion" class="form-label fw-medium">Profesión</label>
+                            <input asp-for="Profesion" class="form-control form-control-lg" placeholder="Profesión" />
+                            <span asp-validation-for="Profesion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Disponibilidad" class="form-label fw-medium">Disponibilidad</label>
+                            <div class="form-check">
+                                <input type="radio" asp-for="Disponibilidad" value="true" class="form-check-input" id="disponibilidadTrue" />
+                                <label class="form-check-label" for="disponibilidadTrue">Verdadero</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" asp-for="Disponibilidad" value="false" class="form-check-input" id="disponibilidadFalse" />
+                                <label class="form-check-label" for="disponibilidadFalse">Falso</label>
+                            </div>
+                            <span asp-validation-for="Disponibilidad" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="NumeroTrabajosRealizados" class="form-label fw-medium">Número de Trabajos Realizados</label>
+                            <input asp-for="NumeroTrabajosRealizados" class="form-control form-control-lg" placeholder="Número de Trabajos Realizados" />
+                            <span asp-validation-for="NumeroTrabajosRealizados" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="VoluntarioId" class="form-label fw-medium">Voluntario</label>
+                            <select asp-for="VoluntarioId" class="form-select form-select-lg" asp-items="ViewBag.VoluntarioId">
+                                <option value="" selected disabled>-- Seleccione un voluntario --</option>
+                            </select>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">Volver al Listado</a>
+                            <button type="submit" class="btn btn-success btn-lg px-4">Guardar Voluntario Sanitario</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Help Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">Información Importante</h5>
+                    <p class="card-text">Asegúrese de que toda la información proporcionada sea correcta y esté actualizada.</p>
+                    <ul class="list-group list-group-flush bg-transparent mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">Complete todos los campos obligatorios</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">Verifique la dirección y el correo electrónico</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">Asegúrese de que el número de teléfono sea válido</li>
+                    </ul>
+                    <p class="card-text">Para más información sobre el registro de voluntarios, contacte con nuestro equipo.</p>
+                    <a href="#" class="btn btn-outline-success">Ayuda con el Registro</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
