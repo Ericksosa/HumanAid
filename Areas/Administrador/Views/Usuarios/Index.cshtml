@@ -2,40 +2,31 @@
 
 @{
     ViewData["Title"] = "Gestión de Usuarios";
+    int? selectedRolId = ViewData["RolId"] as int?;
 }
 
 <div class="container-fluid py-4">
     <h1 class="mb-1">Gestión de Usuarios</h1>
     <p class="text-muted mb-4">Administra los usuarios registrados en el sistema</p>
 
-    <div class="mb-4">
-        <a asp-action="Create" class="btn btn-success">
-            <i class="fas fa-plus-circle me-1"></i> Nuevo Usuario
-        </a>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body p-4">
-            <form asp-action="Index" method="get" class="row g-3">
-                <div class="col-md-5">
-                    <label for="searchCorreo" class="form-label">Buscar por correo:</label>
-                    <input type="text" name="searchCorreo" id="searchCorreo" class="form-control" placeholder="Ingrese parte del correo">
-                </div>
-                <div class="col-md-5">
-                    <label for="RolId" class="form-label">Filtrar por rol:</label>
-                    <select id="RolId" name="RolId" class="form-select">
-                        <option value="">Todos los roles</option>
-                        @foreach (var rol in ViewBag.Roles as IEnumerable<HumanAid.Models.Rol>)
-                        {
-                            <option value="@rol.RolId">@rol.Nombre</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-filter me-1"></i> Filtrar
-                    </button>
-                </div>
+    <div class="row mb-4">
+        <div class="col-md-6 mb-2 mb-md-0">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus-circle me-1"></i> Nuevo Usuario
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="d-flex">
+                <input type="text" name="searchCorreo" class="form-control me-2" placeholder="Buscar por correo..." value="@ViewData["SearchCorreo"]">
+                <select name="RolId" class="form-control me-2">
+                    <option value="">Todos los roles</option>
+                    @foreach (var rol in ViewBag.Roles)
+                    {
+                        string selected = selectedRolId.HasValue && selectedRolId.Value == rol.RolId ? "selected" : "";
+                        <option value="@rol.RolId" selected="@selected">@rol.Nombre</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">Buscar</button>
             </form>
         </div>
     </div>
@@ -44,10 +35,9 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>@Html.DisplayNameFor(model => model.Correo)</th>
-                    <th>@Html.DisplayNameFor(model => model.Clave)</th>
-                    <th>@Html.DisplayNameFor(model => model.Rol)</th>
-                    <th>@Html.DisplayNameFor(model => model.FechaRegistro)</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Fecha de Registro</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -56,17 +46,35 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Correo)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Clave)</td>
                         <td>@Html.DisplayFor(modelItem => item.Rol.Nombre)</td>
-                        <td>@Html.DisplayFor(modelItem => item.FechaRegistro)</td>
+                        <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
                         <td class="text-center">
+                            <div class="btn-group">
                                 <a asp-action="Edit" asp-route-id="@item.UsuarioId" class="btn btn-warning btn-sm">Editar</a>
                                 <a asp-action="Details" asp-route-id="@item.UsuarioId" class="btn btn-primary btn-sm">Detalles</a>
                                 <a asp-action="Delete" asp-route-id="@item.UsuarioId" class="btn btn-danger btn-sm">Eliminar</a>
+                            </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Convert.ToInt32(ViewData["CurrentPage"]) == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Convert.ToInt32(ViewData["CurrentPage"]) - 1)" asp-route-searchCorreo="@ViewData["SearchCorreo"]" asp-route-RolId="@ViewData["RolId"]">Anterior</a>
+            </li>
+            @for (int i = 1; i <= Convert.ToInt32(ViewData["TotalPages"]); i++)
+            {
+                <li class="page-item @(Convert.ToInt32(ViewData["CurrentPage"]) == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchCorreo="@ViewData["SearchCorreo"]" asp-route-RolId="@ViewData["RolId"]">@i</a>
+                </li>
+            }
+            <li class="page-item @(Convert.ToInt32(ViewData["CurrentPage"]) == Convert.ToInt32(ViewData["TotalPages"]) ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Convert.ToInt32(ViewData["CurrentPage"]) + 1)" asp-route-searchCorreo="@ViewData["SearchCorreo"]" asp-route-RolId="@ViewData["RolId"]">Siguiente</a>
+            </li>
+        </ul>
+    </nav>
 </div>
