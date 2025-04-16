@@ -29,16 +29,25 @@ namespace HumanAid.Areas.VoluntariosAdministrativos.Controllers
                 return Unauthorized();
             }
 
-            // Filtrar las labores basadas en el UsuarioId
+            // Buscar el voluntario que corresponde a este usuario
+            var voluntario = await _context.Voluntario
+                .FirstOrDefaultAsync(v => v.UsuarioId.ToString() == userId);
+
+            if (voluntario == null)
+            {
+                return NotFound("No se encontró un voluntario con este UsuarioId.");
+            }
+
+            // Ahora sí puedes buscar las labores con ese VoluntarioId
             var laboresQuery = _context.Labores
-                .Where(l => l.VoluntarioId.ToString() == userId);
+                .Where(l => l.VoluntarioId == voluntario.VoluntarioId);
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 laboresQuery = laboresQuery.Where(l => l.Descripcion.Contains(searchString));
             }
 
-            // Ordenar las labores según la fecha
+            // Ordenar según el sortOrder
             switch (sortOrder)
             {
                 case "date_desc":
@@ -62,6 +71,7 @@ namespace HumanAid.Areas.VoluntariosAdministrativos.Controllers
 
             return View(labores);
         }
+
     }
 }
 

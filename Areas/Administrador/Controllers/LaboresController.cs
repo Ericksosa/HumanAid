@@ -65,7 +65,7 @@ namespace HumanAid.Areas.Administrador.Controllers
         // GET: Administrador/Labores/Create
         public IActionResult Create()
         {
-            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "UsuarioId", "Nombre");
+            ViewData["VoluntarioId"] = new SelectList(_context.Voluntario, "VoluntarioId", "Nombre");
             return View();
         }
 

@@ -39,7 +39,7 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="py-3 px-4 border-0">
-                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Descripcion)</span>
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.First().Descripcion)</span>
                             </th>
                             <th class="py-3 px-4 border-0">
                                 <a asp-action="Index" asp-route-sortOrder="@dateSortParam" asp-route-searchString="@searchString" class="fw-semibold">
@@ -47,10 +47,10 @@
                                 </a>
                             </th>
                             <th class="py-3 px-4 border-0">
-                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Tipo)</span>
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.First().Tipo)</span>
                             </th>
                             <th class="py-3 px-4 border-0">
-                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.Estado)</span>
+                                <span class="fw-semibold">@Html.DisplayNameFor(model => model.First().Estado)</span>
                             </th>
                         </tr>
                     </thead>
@@ -116,4 +116,7 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap Icons CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
