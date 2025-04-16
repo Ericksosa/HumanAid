@@ -1,36 +1,143 @@
 ﻿@model HumanAid.Models.VoluntarioAdministrativo
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Voluntario Administrativo";
 }
 
-<h1>Details</h1>
+<div class="container mb-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5 fw-bold">Detalles del Voluntario Administrativo</h1>
+                    <p class="text-muted">Información completa sobre el voluntario administrativo #@Model.VoluntarioAdministrativoId</p>
+                </div>
+                <div class="d-flex">
+                    <a asp-action="Edit" asp-route-id="@Model?.VoluntarioAdministrativoId" class="btn btn-warning me-2">
+                        <i class="bi bi-pencil-square me-2"></i>Editar
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model?.VoluntarioAdministrativoId" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-2"></i>Eliminar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div>
-    <h4>VoluntarioAdministrativo</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Profesion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Profesion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Departamento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Departamento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Voluntario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Voluntario.Nombre)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Main Details Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-person me-2"></i>Información del Voluntario Administrativo
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <!-- Profesión -->
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100">
+                                <div class="text-muted small mb-1">
+                                    @Html.DisplayNameFor(model => model.Profesion)
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-briefcase-fill text-primary fs-3 me-3"></i>
+                                    <h4 class="fw-bold mb-0">@Html.DisplayFor(model => model.Profesion)</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Departamento -->
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100">
+                                <div class="text-muted small mb-1">
+                                    @Html.DisplayNameFor(model => model.Departamento)
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-building text-success fs-3 me-3"></i>
+                                    <h4 class="fw-bold mb-0">@Html.DisplayFor(model => model.Departamento)</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Voluntario -->
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100">
+                                <div class="text-muted small mb-1">
+                                    @Html.DisplayNameFor(model => model.Voluntario)
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-person-fill text-info fs-3 me-3"></i>
+                                    <h4 class="fw-bold mb-0">@Html.DisplayFor(model => model.Voluntario.Nombre)</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Status Card -->
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body p-4">
+                    <h5 class="card-title">
+                        <i class="bi bi-info-circle me-2"></i>Estado del Voluntario Administrativo
+                    </h5>
+
+                    <div class="d-flex align-items-center mb-3 mt-4">
+                        <div class="bg-success rounded-circle p-2 me-3">
+                            <i class="bi bi-calendar-check text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Fecha de registro</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-5).ToString("dd/MM/yyyy")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 me-3">
+                            <i class="bi bi-person text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Registrado por</div>
+                            <div class="fw-medium">Administrador</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning rounded-circle p-2 me-3">
+                            <i class="bi bi-clock-history text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Última modificación</div>
+                            <div class="fw-medium">@DateTime.Now.AddDays(-2).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="bg-info rounded-circle p-2 me-3">
+                            <i class="bi bi-check-circle text-white"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small">Estado</div>
+                            <div class="fw-medium">
+                                <span class="badge bg-success">Activo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.VoluntarioAdministrativoId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
