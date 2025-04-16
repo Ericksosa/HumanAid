@@ -1,49 +1,90 @@
 ﻿@model HumanAid.Models.Gastos
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Gasto";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Editar Gasto</h1>
+    <p class="text-muted mb-4">Modifique la información del gasto</p>
 
-<h4>Gastos</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdGastos" />
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h4>Modificar Información del Gasto #@Model.IdGastos</h4>
+                <hr />
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="IdGastos" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Descripcion" class="control-label"></label>
+                        <input asp-for="Descripcion" class="form-control" />
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Importe" class="control-label"></label>
+                        <input asp-for="Importe" class="form-control" />
+                        <span asp-validation-for="Importe" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="FechaGasto" class="control-label"></label>
+                        <input asp-for="FechaGasto" class="form-control" />
+                        <span asp-validation-for="FechaGasto" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="SedeId" class="control-label"></label>
+                        <select asp-for="SedeId" class="form-select" asp-items="ViewBag.SedeId"></select>
+                        <span asp-validation-for="SedeId" class="text-danger"></span>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-group d-flex">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-2">Volver al Listado</a>
+                        <input type="submit" value="Save" class="btn btn-warning" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Importe" class="control-label"></label>
-                <input asp-for="Importe" class="form-control" />
-                <span asp-validation-for="Importe" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-4 rounded">
+                <h4>Estado del Gasto</h4>
+                <hr />
+                <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="rounded-circle bg-success me-2" style="width: 12px; height: 12px;"></div>
+                        <span class="fw-bold">Importe</span>
+                    </div>
+                    <p class="ms-4 mb-0">@Html.DisplayFor(model => model.Importe)</p>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="rounded-circle bg-primary me-2" style="width: 12px; height: 12px;"></div>
+                        <span class="fw-bold">Fecha del gasto</span>
+                    </div>
+                    <p class="ms-4 mb-0">@Html.DisplayFor(model => model.FechaGasto)</p>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="rounded-circle bg-info me-2" style="width: 12px; height: 12px;"></div>
+                        <span class="fw-bold">Sede</span>
+                    </div>
+                    <p class="ms-4 mb-0">@Html.DisplayFor(model => model.Sede.Nombre)</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaGasto" class="control-label"></label>
-                <input asp-for="FechaGasto" class="form-control" />
-                <span asp-validation-for="FechaGasto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SedeId" class="control-label"></label>
-                <select asp-for="SedeId" class="form-control" asp-items="ViewBag.SedeId"></select>
-                <span asp-validation-for="SedeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

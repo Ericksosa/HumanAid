@@ -21,10 +21,21 @@ namespace HumanAid.Areas.Administrador.Controllers
         }
 
         // GET: Socio/Socios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchNombre)
         {
-            var humanAidDbContext = _context.Socio.Include(s => s.Sede).Include(s => s.TipoCuota).Include(s => s.Usuario);
-            return View(await humanAidDbContext.ToListAsync());
+            var sociosQuery = _context.Socio
+                .Include(s => s.Sede)
+                .Include(s => s.TipoCuota)
+                .Include(s => s.Usuario)
+                .AsQueryable();
+
+            // Filtrar por nombre si el parámetro no está vacío
+            if (!string.IsNullOrEmpty(searchNombre))
+            {
+                sociosQuery = sociosQuery.Where(s => s.Nombre.Contains(searchNombre));
+            }
+
+            return View(await sociosQuery.ToListAsync());
         }
 
         // GET: Socio/Socios/Details/5

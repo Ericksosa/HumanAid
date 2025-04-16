@@ -1,43 +1,70 @@
 ﻿@model HumanAid.Models.Rol
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Rol";
 }
 
-<h1>Create</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Nuevo Rol</h1>
+    <p class="text-muted mb-4">Complete el formulario para crear un nuevo rol en el sistema</p>
 
-<h4>Rol</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h4>Información del Rol</h4>
+                <hr />
+                <form asp-action="Create" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre del Rol</label>
+                            <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre del rol" />
+                            <span asp-validation-for="Nombre" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FechaRegistro" class="form-label">Fecha de Registro</label>
+                            <input asp-for="FechaRegistro" class="form-control" type="datetime-local" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="FechaRegistro" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descripcion" class="form-label">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" rows="3" placeholder="Ingrese una descripción detallada del rol"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-2">Volver al Listado</a>
+                        <button type="submit" class="btn btn-success">Guardar Rol</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-4 rounded">
+                <h4>Información Importante</h4>
+                <hr />
+                <ul class="mb-0">
+                    <li class="mb-2">Los roles definen los permisos de los usuarios en el sistema</li>
+                    <li class="mb-2">El nombre del rol debe ser único</li>
+                    <li class="mb-2">La descripción debe ser clara y específica</li>
+                    <li class="mb-2">Una vez creado, el rol puede ser asignado a los usuarios</li>
+                </ul>
+                <hr />
+                <p class="mb-0">Para más información sobre la gestión de roles, contacte al administrador del sistema.</p>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaRegistro" class="control-label"></label>
-                <input asp-for="FechaRegistro" class="form-control" />
-                <span asp-validation-for="FechaRegistro" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
