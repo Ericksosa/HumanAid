@@ -15,10 +15,10 @@ namespace HumanAid.Models
             // Rol
             var roles = new List<Rol>
             {
-                new Rol { Nombre = "Administrador", FechaRegistro = DateTime.Now },
-                new Rol { Nombre = "Socio", FechaRegistro = DateTime.Now },
-                new Rol { Nombre = "VoluntarioAdministrativo", FechaRegistro = DateTime.Now },
-                new Rol { Nombre = "VoluntarioSanitario", FechaRegistro = DateTime.Now }
+                new Rol { Nombre = "Administrador", FechaRegistro = DateTime.Now, Descripcion = "Este es el administrador" },
+                new Rol { Nombre = "Socio", FechaRegistro = DateTime.Now, Descripcion = "Este es el Socio" },
+                new Rol { Nombre = "VoluntarioAdministrativo", FechaRegistro = DateTime.Now, Descripcion = "Este es el VoluntarioAdministrativo" },
+                new Rol { Nombre = "VoluntarioSanitario", FechaRegistro = DateTime.Now, Descripcion = "Este es el VoluntarioSanitario" }
             };
 
             context.Rol.AddRange(roles);
