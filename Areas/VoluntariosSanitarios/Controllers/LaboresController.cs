@@ -29,9 +29,18 @@ namespace HumanAid.Areas.VoluntariosSanitarios.Controllers
                 return Unauthorized();
             }
 
-            // Filtrar las labores basadas en el UsuarioId
+            // Encontrar el registro de voluntario basado en el UsuarioId
+            var voluntario = await _context.Voluntario
+                .FirstOrDefaultAsync(v => v.UsuarioId.ToString() == userId);
+
+            if (voluntario == null)
+            {
+                return NotFound("Voluntario no encontrado.");
+            }
+
+            // Filtrar las labores basadas en el VoluntarioId
             var laboresQuery = _context.Labores
-                .Where(l => l.VoluntarioId.ToString() == userId);
+                .Where(l => l.VoluntarioId == voluntario.VoluntarioId);
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -62,6 +71,9 @@ namespace HumanAid.Areas.VoluntariosSanitarios.Controllers
 
             return View(labores);
         }
+
+
+
     }
 }
 
