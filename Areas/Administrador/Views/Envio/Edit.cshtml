@@ -53,7 +53,7 @@
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                         <input type="hidden" asp-for="EnvioId" />
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label asp-for="CodigoEnvio" class="form-label fw-medium">
                                 <i class="bi bi-upc-scan me-2"></i>Código de Envío
                             </label>
@@ -61,7 +61,7 @@
                             <span asp-validation-for="CodigoEnvio" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label asp-for="Fecha" class="form-label fw-medium">
                                 <i class="bi bi-calendar-event me-2"></i>Fecha de Registro
                             </label>
@@ -69,12 +69,57 @@
                             <span asp-validation-for="Fecha" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label asp-for="Destino" class="form-label fw-medium">
                                 <i class="bi bi-geo-alt me-2"></i>Destino
                             </label>
                             <input asp-for="Destino" class="form-control form-control-lg" placeholder="Lugar de destino" />
                             <span asp-validation-for="Destino" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FechaSalida" class="form-label fw-medium">
+                                <i class="bi bi-box-arrow-up-right me-2"></i>Fecha de Salida
+                            </label>
+                            <input asp-for="FechaSalida" class="form-control form-control-lg" type="date" />
+                            <span asp-validation-for="FechaSalida" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TipoEnvio" class="form-label fw-medium">
+                                <i class="bi bi-tags me-2"></i>Tipo de Envío
+                            </label>
+                            <select asp-for="TipoEnvio" class="form-select form-select-lg">
+                                <option value="Ayuda Material">Ayuda Material</option>
+                                <option value="Humanitaria">Humanitaria</option>
+                            </select>
+                            <span asp-validation-for="TipoEnvio" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Sedes" class="form-label fw-medium">
+                                <i class="bi bi-hourglass-split me-2"></i>Sedes Organizadoras
+                            </label>
+                            <select id="Sedes" name="sedeIds[]" class="form-select form-select-lg">
+                                @foreach (var sede in ViewBag.Sedes)
+                                {
+                                    <option value="@sede.SedeId")>
+                                        @sede.Nombre
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Estado" class="form-label fw-medium">
+                                <i class="bi bi-hourglass-split me-2"></i>Estado del Envío
+                            </label>
+                            <select asp-for="Estado" class="form-select form-select-lg">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Enviado">Enviado</option>
+                                <option value="Entregado">Entregado</option>
+                            </select>
+                            <span asp-validation-for="Estado" class="text-danger"></span>
                         </div>
 
                         <hr class="my-4">
@@ -100,7 +145,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     @{

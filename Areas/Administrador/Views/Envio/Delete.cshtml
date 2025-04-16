@@ -133,9 +133,9 @@
                 <form asp-action="Delete" asp-route-id="@Model.EnvioId" method="post" onsubmit="return confirmacionPersonalizada();">
                     <input type="hidden" asp-for="EnvioId" />
                          <div class="d-flex justify-content-between mt-3">
-                            <a asp-action="Index" class="btn btn-outline-secondary">
+                           <a asp-action="Index" class="btn btn-outline-secondary d-flex align-items-center justify-content-center">
                                 <i class="bi bi-arrow-left me-2"></i>Cancelar
-                                </a>
+                            </a>
                             <div class="d-flex gap-2">
                                 <a asp-action="Edit" asp-route-id="@Model.EnvioId" class="btn btn-warning btn-lg">
                                     <i class="bi bi-pencil me-2"></i>Editar

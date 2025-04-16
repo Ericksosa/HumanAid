@@ -4,65 +4,76 @@
     ViewData["Title"] = "Detalles del Envío";
 }
 
-<div class="container mb-5">
-    <!-- Header -->
+<div class="container py-5">
+    <!-- Título principal -->
     <div class="row mb-4 text-center">
         <div class="col-12">
             <h1 class="display-5 fw-bold">Detalles del Envío</h1>
-            <p class="text-muted">Aquí están los detalles del envío registrado</p>
+            <p class="text-muted">Consulta los datos completos del envío seleccionado.</p>
         </div>
     </div>
 
-    <div class="row g-4">
-        <!-- Sidebar alineado a la derecha -->
-        <div class="col-lg-4 order-lg-2">
-            <div class="card border border-secondary bg-light rounded shadow-sm">
-                <div class="card-body p-4">
-                    <h5 class="card-title">
-                        <i class="bi bi-info-circle me-2"></i>Información Importante
-                    </h5>
-                    <p class="card-text small text-muted">Estos son los detalles del envío registrado. Revise la información con cuidado.</p>
-                    <ul class="list-group list-group-flush bg-transparent mb-3">
-                        <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-center">
-                            <span class="badge bg-success me-2"><i class="bi bi-check-circle-fill"></i></span> Fechas confirmadas
-                        </li>
-                        <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-center">
-                            <span class="badge bg-success me-2"><i class="bi bi-check-circle-fill"></i></span> Sede organizadora verificada
-                        </li>
-                        <li class="list-group-item bg-transparent border-0 ps-0 d-flex align-items-center">
-                            <span class="badge bg-success me-2"><i class="bi bi-check-circle-fill"></i></span> Estado del envío actualizado
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Información del Envío -->
+    <div class="row justify-content-center">
+        <!-- Contenido principal -->
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-light py-3">
-                    <h5 class="card-title mb-0">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <!-- Información del Envío -->
+                    <h5 class="mb-4 text-primary fw-semibold">
                         <i class="bi bi-truck me-2"></i>Información del Envío
                     </h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="mb-4">
-                        <label class="form-label fw-medium"><i class="bi bi-upc-scan me-2"></i>Código de Envío</label>
-                        <p class="border px-3 py-2 rounded bg-light">@Model.CodigoEnvio</p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-upc-scan me-2"></i>Código de Envío
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.CodigoEnvio" readonly />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-medium"><i class="bi bi-calendar-event me-2"></i>Fecha de Registro</label>
-                        <p class="border px-3 py-2 rounded bg-light">@Model.Fecha.ToString("dd/MM/yyyy")</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-calendar-event me-2"></i>Fecha de Registro
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.Fecha.ToString("yyyy-MM-dd")" readonly />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-medium"><i class="bi bi-geo-alt me-2"></i>Destino</label>
-                        <p class="border px-3 py-2 rounded bg-light">@Model.Destino</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-geo-alt me-2"></i>Destino
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.Destino" readonly />
                     </div>
 
-                    <hr class="my-4">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>Fecha de Salida
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.FechaSalida.ToString("yyyy-MM-dd")" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-tags me-2"></i>Tipo de Envío
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.TipoEnvio" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-hourglass-split me-2"></i>Estado del Envío
+                        </label>
+                        <input class="form-control form-control-lg bg-light" value="@Model.Estado" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">
+                            <i class="bi bi-building me-2"></i>Sede Organizadora
+                        </label>
+                        <input class="form-control form-control-lg bg-light" 
+                        value="@(ViewBag.Sedes != null && ViewBag.Sedes.Count > 0 ? ViewBag.Sedes[0].Nombre : "Sin sede asignada")" readonly />
+                    </div>
+                    <!-- Botones de acción -->
+                    <hr class="my-4" />
+                    <div class="d-flex justify-content-between flex-wrap gap-2">
                         <a asp-action="Index" class="btn btn-outline-secondary">
                             <i class="bi bi-arrow-left me-2"></i>Volver al Listado
                         </a>
@@ -78,10 +89,31 @@
                 </div>
             </div>
         </div>
+
+        <!-- Panel lateral informativo -->
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card bg-light border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title text-primary fw-semibold">
+                        <i class="bi bi-info-circle me-2"></i>Resumen del Envío
+                    </h5>
+                    <p class="text-muted small">Verifique los siguientes datos importantes:</p>
+                    <ul class="list-unstyled mt-3">
+                        <li class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i> Fechas confirmadas
+                        </li>
+                        <li class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i> Sede organizadora verificada
+                        </li>
+                        <li class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i> Estado del envío actualizado
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-
 
 @section Scripts {
     @{
