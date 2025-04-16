@@ -4,34 +4,61 @@
     ViewData["Title"] = "Asignar Socios";
 }
 
-<h1>Asignar Socios a @Model.Nombre</h1>
+<div class="container mb-5">
+    <!-- Header -->
+    <div class="row mb-4 text-center">
+        <div class="col-12">
+            <h1 class="display-6 fw-semibold text-dark">Asignar Socios</h1>
+            <p class="text-muted">Seleccione los socios a asociar con la cuota <strong>@Model.Nombre</strong></p>
+        </div>
+    </div>
 
-<form asp-action="AsignarSocios">
-    <input type="hidden" asp-for="TipoCuotaId" />
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <!-- Form Card -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form asp-action="AsignarSocios">
+                        <input type="hidden" asp-for="TipoCuotaId" />
 
-    <div class="form-group">
-        <label class="form-label fw-bold">Seleccione los socios:</label>    <!-- Mejor vistazo graficos a la lista de los socios -->
-
-        @if (ViewBag.Socios == null || !((List<Socio>)ViewBag.Socios).Any())
-        {
-            <p class="text-danger">No hay socios disponibles para asignar.</p>
-        }
-        else
-        {
-            <div class="card shadow-sm p-3">
-                <div class="list-group">
-                    @foreach (var socio in ViewBag.Socios)
-                    {
-                            <label class="list-group-item d-flex align-items-center">
-                                <input type="checkbox" name="SocioIds" value="@socio.SocioId" class="form-check-input me-2">
-                                <span class="fw-semibold">@socio.Nombre</span>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold mb-2">
+                                <i class="bi bi-people me-2"></i>Socios Disponibles
                             </label>
-                    }
+
+                            @if (ViewBag.Socios == null || !((List<Socio>)ViewBag.Socios).Any())
+                            {
+                                    <div class="alert alert-warning small">
+                                        <i class="bi bi-exclamation-circle me-2"></i>No hay socios disponibles para asignar.
+                                    </div>
+                            }
+                            else
+                            {
+                                    <div class="card border-0">
+                                        <div class="list-group list-group-flush">
+                                        @foreach (var socio in ViewBag.Socios)
+                                        {
+                                                    <label class="list-group-item d-flex align-items-center border-bottom py-3 mb-2">
+                                                        <input type="checkbox" name="SocioIds" value="@socio.SocioId" class="form-check-input me-2">
+                                                        <span class="fw-semibold">@socio.Nombre</span>
+                                                    </label>
+                                        }
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="bi bi-check-circle me-2"></i>Asignar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        }
+        </div>
+    </div>
 </div>
-    <br/>
-    <button type="submit" class="btn btn-success">Asignar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>

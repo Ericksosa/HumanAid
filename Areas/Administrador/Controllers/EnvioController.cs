@@ -158,12 +158,26 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
 
-            var envio = await _context.Envio.FindAsync(id);
+            var envio = await _context.Envio
+            .Include(e => e.EnvioSedes) // Incluir la relación con las sedes
+            .ThenInclude(es => es.Sede)
+            .FirstOrDefaultAsync(e => e.EnvioId == id);
+
             if (envio == null)
             {
                 return NotFound();
             }
             RecargarSede(); // Llamar a la funcion recargar sede
+
+            // Obtener la sede organizadora actual del envío
+            int? sedeActualId = envio.EnvioSedes?.FirstOrDefault()?.SedeId;
+
+            // Filtrar sedes excluyendo la sede organizadora actual
+            ViewBag.Sedes = await _context.Sede
+                .Where(s => s.SedeId != sedeActualId) // Excluir la sede actual
+                .Select(s => new { s.SedeId, s.Nombre })
+                .ToListAsync();
+
             return View(envio);
         }
 
@@ -183,8 +197,8 @@ namespace HumanAid.Areas.Administrador.Controllers
             {
                 var envioToUpdate = await _context.Envio
                     .Include(e => e.EnvioSedes) // Incluir la relación
+                     .ThenInclude(es => es.Sede)
                     .FirstOrDefaultAsync(e => e.EnvioId == id);
-
                 if (envioToUpdate == null)
                 {
                     return NotFound();
@@ -223,7 +237,7 @@ namespace HumanAid.Areas.Administrador.Controllers
 
                 _context.Update(envioToUpdate);
                 await _context.SaveChangesAsync();
-
+                await transaction.CommitAsync();
                 TempData["success"] = "Envio editado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
@@ -271,6 +285,15 @@ namespace HumanAid.Areas.Administrador.Controllers
                 return NotFound();
             }
             RecargarSede(); // Llamar a la funcion recargar sede
+            // Obtener la sede organizadora actual del envío
+             int? sedeActualId = envio.EnvioSedes?.FirstOrDefault()?.SedeId;
+
+       
+            ViewBag.Sedes = await _context.Sede
+                .Where(s => s.SedeId == sedeActualId) 
+                .Select(s => new { s.SedeId, s.Nombre })
+                .ToListAsync();
+
             return View(envio);
         }
 
@@ -303,7 +326,7 @@ namespace HumanAid.Areas.Administrador.Controllers
                 _context.Envio.Remove(envio);            
                 await transaction.CommitAsync();
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Envío eliminado correctamente.";
+                TempData["success"] = "Envío eliminado correctamente.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

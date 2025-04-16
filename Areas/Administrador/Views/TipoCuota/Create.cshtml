@@ -1,47 +1,68 @@
 ﻿@model HumanAid.Models.TipoCuota
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Cuota";
 }
 
-<h1>Create</h1>
-
-<h4>Cuotas</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label asp-for="Importe" class="control-label"></label>
-                <input asp-for="Importe" class="form-control" />
-                <span asp-validation-for="Importe" class="text-danger"></span>
-            </div>
-             <br/>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-             <br/>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mb-5">
+    <!-- Header -->
+    <div class="row mb-4 text-center">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Registrar Nueva Cuota</h1>
+            <p class="text-muted">Complete los campos para registrar un nuevo tipo de cuota</p>
+        </div>
     </div>
-</div>
- <br/>
-<div>
-    <a asp-action="Index">Back to List</a>
+
+    <div class="row g-4">
+        <div class="col-lg-6 mx-auto">
+            <!-- Form Card -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label fw-medium">
+                                <i class="bi bi-fonts me-2"></i> Nombre de Cuota
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" placeholder="Ingrese el nombre" />
+                            <span asp-validation-for="Nombre" class="form-text text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Importe" class="form-label fw-medium">
+                                <i class="bi bi-cash-stack me-2"></i> Importe
+                            </label>
+                            <input asp-for="Importe" class="form-control form-control-lg" placeholder="Ingrese el importe" />
+                            <span asp-validation-for="Importe" class="form-text text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descripcion" class="form-label fw-medium">
+                                <i class="bi bi-card-text me-2"></i> Descripción
+                            </label>
+                            <textarea asp-for="Descripcion" class="form-control form-control-lg" placeholder="Ingrese una descripción"></textarea>
+                            <span asp-validation-for="Descripcion" class="form-text text-danger"></span>
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver al Listado
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-4">
+                                <i class="bi bi-check-circle me-2"></i>Guardar Cuota
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
