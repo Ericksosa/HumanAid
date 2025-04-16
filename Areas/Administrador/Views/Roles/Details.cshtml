@@ -1,36 +1,72 @@
 ﻿@model HumanAid.Models.Rol
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles de Rol";
 }
 
-<h1>Details</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Detalles del Rol</h1>
+    <p class="text-muted mb-4">Información completa sobre el rol #@Model.RolId</p>
 
-<div>
-    <h4>Rol</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaRegistro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaRegistro)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.RolId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-end">
+            <a asp-action="Edit" asp-route-id="@Model.RolId" class="btn btn-warning me-2">Editar</a>
+            <a asp-action="Delete" asp-route-id="@Model.RolId" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h4>Información del Rol</h4>
+                <hr />
+
+                <div class="bg-light p-4 rounded mb-4">
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Nombre:</div>
+                        <div class="col-md-9">
+                            <span class="badge @(Model.Nombre == "Administrador" ? "bg-danger" :
+                                  Model.Nombre == "VoluntarioSanitario" ? "bg-success" :
+                                  Model.Nombre == "Socio" ? "bg-info" : "bg-secondary")">
+                                @Html.DisplayFor(model => model.Nombre)
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Descripción:</div>
+                        <div class="col-md-9">@Html.DisplayFor(model => model.Descripcion)</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Fecha de Registro:</div>
+                        <div class="col-md-9">@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">ID:</div>
+                        <div class="col-md-9"><code>@Model.RolId</code></div>
+                    </div>
+                </div>
+
+                <div class="d-flex">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Volver al Listado</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-4 rounded">
+                <h4>Información de Permisos</h4>
+                <hr />
+                <p>Este rol tiene los siguientes permisos en el sistema:</p>
+                <ul class="mb-0">
+                    <li class="mb-2">Acceso a módulos específicos</li>
+                    <li class="mb-2">Permisos de lectura y escritura</li>
+                    <li class="mb-2">Nivel de autorización definido</li>
+                    <li class="mb-2">Restricciones de acceso configuradas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

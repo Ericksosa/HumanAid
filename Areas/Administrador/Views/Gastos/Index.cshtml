@@ -1,66 +1,86 @@
 ﻿@model IEnumerable<HumanAid.Models.Gastos>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Gastos";
 }
 
-<h1>Index</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Gestión de Gastos</h1>
+    <p class="text-muted mb-4">Administra los gastos registrados en el sistema</p>
 
-<form asp-action="Index" method="get">
-    <label for="SedeId">Filtrar por sede:</label>
-    <select id="SedeId" name="SedeId" class="form-control">
-        <option value="">Todas las sedes</option>
-        @foreach (var sede in ViewBag.Sedes as IEnumerable<HumanAid.Models.Sede>)
-        {
-            <option value="@sede.SedeId">@sede.Nombre</option>
-        }
-    </select>
-    <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
-</form>
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus-circle me-1"></i> Nuevo Gasto
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="d-flex">
+                <select id="SedeId" name="SedeId" class="form-select me-2">
+                    <option value="">Todas las sedes</option>
+                    @foreach (var sede in ViewBag.Sedes as IEnumerable<HumanAid.Models.Sede>)
+                    {
+                        <option value="@sede.SedeId">@sede.Nombre</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Importe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaGasto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sede)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Descripcion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Importe)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaGasto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Sede.Nombre)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdGastos">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdGastos">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdGastos">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Importe</th>
+                    <th>Fecha de Gasto</th>
+                    <th>Sede</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="d-inline-block text-truncate" style="max-width: 300px;" title="@item.Descripcion">
+                                @Html.DisplayFor(modelItem => item.Descripcion)
+                            </span>
+                        </td>
+                        <td>
+                                @item.Importe.ToString("C")
+                        </td>
+                        <td>@item.FechaGasto.ToString("dd/MM/yyyy")</td>
+                        <td>@Html.DisplayFor(modelItem => item.Sede.Nombre)</td>
+                        <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdGastos" class="btn btn-warning btn-sm">Editar</a>
+                                <a asp-action="Details" asp-route-id="@item.IdGastos" class="btn btn-primary btn-sm">Detalles</a>
+                                <a asp-action="Delete" asp-route-id="@item.IdGastos" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+
+        $(function () {
+            $('[title]').tooltip();
+        });
+
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sedeId = urlParams.get('SedeId');
+            if (sedeId) {
+                $('#SedeId').val(sedeId);
+            }
+        });
+    </script>
+}

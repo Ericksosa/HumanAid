@@ -1,42 +1,69 @@
 ﻿@model HumanAid.Models.Gastos
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles de Gasto";
 }
 
-<h1>Details</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Detalles del Gasto</h1>
+    <p class="text-muted mb-4">Información completa sobre el gasto #@Model.IdGastos</p>
 
-<div>
-    <h4>Gastos</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Importe)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Importe)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaGasto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaGasto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sede)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sede.Nombre)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdGastos">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-end">
+            <a asp-action="Edit" asp-route-id="@Model.IdGastos" class="btn btn-warning me-2">Editar</a>
+            <a asp-action="Delete" asp-route-id="@Model.IdGastos" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h4>Información del Gasto</h4>
+                <hr />
+
+                <div class="bg-light p-4 rounded mb-4">
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Descripción:</div>
+                        <div class="col-md-9">@Html.DisplayFor(model => model.Descripcion)</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Importe:</div>
+                        <div class="col-md-9">
+                            <span class="badge bg-success">@Model.Importe.ToString("C")</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Fecha del Gasto:</div>
+                        <div class="col-md-9">@Model.FechaGasto.ToString("dd/MM/yyyy")</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">Sede:</div>
+                        <div class="col-md-9">@Html.DisplayFor(model => model.Sede.Nombre)</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3 fw-bold">ID:</div>
+                        <div class="col-md-9"><code>@Model.IdGastos</code></div>
+                    </div>
+                </div>
+
+                <div class="d-flex">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Volver al Listado</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="bg-light p-4 rounded">
+                <h4>Información Adicional</h4>
+                <hr />
+                <p>Este gasto está asociado a la sede <strong>@Model.Sede.Nombre</strong> y fue registrado en el sistema. Los fondos han sido descontados del presupuesto disponible de la sede.</p>
+                <p class="mb-0">Para más información sobre los fondos disponibles, consulte el informe financiero de la sede.</p>
+            </div>
+        </div>
+    </div>
 </div>

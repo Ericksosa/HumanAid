@@ -1,84 +1,78 @@
 ﻿@model IEnumerable<HumanAid.Models.Socio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gestión de Socios";
 }
 
-<h1>Index</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Gestión de Socios</h1>
+    <p class="text-muted mb-4">Administra los socios registrados en el sistema</p>
 
-@if (TempData["Alerta"] != null)
-{
-    <div class="alert alert-warning">
-        @TempData["Alerta"]
+    <div class="row mb-4">
+        <div class="col-md-6 mb-2 mb-md-0">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="fas fa-plus-circle me-1"></i> Nuevo Socio
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="d-flex">
+                <input type="text" name="searchNombre" class="form-control me-2" placeholder="Buscar por nombre..." value="@Context.Request.Query["searchNombre"]">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
     </div>
-}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaNacimiento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CuentaBancaria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaPago)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoCuota)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sede)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaRegistro)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaNacimiento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CuentaBancaria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaPago)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoCuota.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sede.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario.Correo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaRegistro)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SocioId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SocioId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SocioId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Cuenta</th>
+                    <th>Fecha de Pago</th>
+                    <th>Cuota</th>
+                    <th>Sede</th>
+                    <th>Usuario</th>
+                    <th>Registro</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                        <td>@item.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <span class="d-inline-block text-truncate" style="max-width: 120px;" title="@item.CuentaBancaria">
+                                @item.CuentaBancaria
+                            </span>
+                        </td>
+                        <td>@item.FechaPago.ToString("dd/MM/yyyy")</td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.TipoCuota.Nombre)
+                        </td>
+                        <td>
+                            <span class="d-inline-block text-truncate" style="max-width: 100px;" title="@item.Sede.Nombre">
+                                @Html.DisplayFor(modelItem => item.Sede.Nombre)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="d-inline-block text-truncate" style="max-width: 150px;" title="@item.Usuario.Correo">
+                                <a href="mailto:@item.Usuario.Correo">@item.Usuario.Correo</a>
+                            </span>
+                        </td>
+                        <td>@item.FechaRegistro.ToString("dd/MM/yy HH:mm")</td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@item.SocioId" class="btn btn-warning btn-sm">Editar</a>
+                                <a asp-action="Details" asp-route-id="@item.SocioId" class="btn btn-primary btn-sm">Detalles</a>
+                                <a asp-action="Delete" asp-route-id="@item.SocioId" class="btn btn-danger btn-sm">Eliminar</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

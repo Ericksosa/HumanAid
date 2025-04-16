@@ -1,50 +1,79 @@
 ﻿@model Pago
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Registrar Pago";
 }
 
-<h1>Create</h1>
+<div class="container-fluid py-4">
+    <h1 class="mb-1">Nuevo Pago</h1>
+    <p class="text-muted mb-4">Complete el formulario para registrar un nuevo pago</p>
 
-<h4>Pago</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SocioId" class="control-label"></label>
-                <select asp-for="SocioId" class="form-control" asp-items="@(new SelectList(ViewData["SocioId"] as List<SelectListItem>, "Value", "Text"))" id="SocioId"></select>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Tipo de Cuota</label>
-                <input type="text" class="form-control" id="TipoCuotaTexto" readonly value="@ViewData["TipoCuotaTexto"]" />
-                <input type="hidden" asp-for="TipoCuotaId" id="TipoCuotaId" />
-            </div>
-            <div class="form-group">
-                <label asp-for="MontoCuota" class="control-label"></label>
-                <input asp-for="MontoCuota" class="form-control" id="MontoCuota" readonly />
-            </div>
-            <div class="form-group">
-                <label asp-for="CantidadCuotas" class="control-label"></label>
-                <input asp-for="CantidadCuotas" class="form-control" />
-                <span asp-validation-for="CantidadCuotas" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaPago" class="control-label"></label>
-                <input asp-for="FechaPago" class="form-control" />
-                <span asp-validation-for="FechaPago" class="text-danger"></span>
-            </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="mb-4">
+                <h4>Información del Pago</h4>
+                <hr />
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                    <div class="form-group mb-3">
+                        <label asp-for="SocioId" class="control-label">Socio</label>
+                        <select asp-for="SocioId" class="form-select" asp-items="@(new SelectList(ViewData["SocioId"] as List<SelectListItem>, "Value", "Text"))" id="SocioId"></select>
+                        <span asp-validation-for="SocioId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label">Tipo de Cuota</label>
+                        <input type="text" class="form-control" id="TipoCuotaTexto" readonly value="@ViewData["TipoCuotaTexto"]" />
+                        <input type="hidden" asp-for="TipoCuotaId" id="TipoCuotaId" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="MontoCuota" class="control-label">Monto de Cuota</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input asp-for="MontoCuota" class="form-control" id="MontoCuota" readonly />
+                        </div>
+                        <span asp-validation-for="MontoCuota" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CantidadCuotas" class="control-label">Cantidad de Cuotas</label>
+                        <input asp-for="CantidadCuotas" class="form-control" type="number" min="1" />
+                        <span asp-validation-for="CantidadCuotas" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="FechaPago" class="control-label">Fecha de Pago</label>
+                        <input asp-for="FechaPago" class="form-control" type="date" />
+                        <span asp-validation-for="FechaPago" class="text-danger"></span>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="form-group d-flex">
+                        <a asp-action="Index" class="btn btn-outline-secondary me-2">Volver al Listado</a>
+                        <input type="submit" value="Create" class="btn btn-success" />
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+
+        <div class="col-md-4">
+            <div class="bg-light p-4 rounded">
+                <h4>Información Importante</h4>
+                <hr />
+                <ul class="mb-0">
+                    <li class="mb-2">Seleccione un socio para cargar automáticamente su tipo de cuota</li>
+                    <li class="mb-2">El monto de la cuota se calcula automáticamente según el tipo de cuota del socio</li>
+                    <li class="mb-2">Indique la cantidad de cuotas que desea pagar</li>
+                    <li class="mb-2">La fecha de pago debe ser válida</li>
+                </ul>
+                <hr />
+                <p class="mb-0">Para más información sobre la gestión de pagos, contacte al administrador del sistema.</p>
+            </div>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
@@ -86,6 +115,4 @@
             actualizarDatosCuota(socioInicial);
         });
     </script>
-
-
 }
